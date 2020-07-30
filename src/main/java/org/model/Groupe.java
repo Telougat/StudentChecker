@@ -1,6 +1,6 @@
 package org.model;
 
 public class Groupe {
-    private int ID;
-    private String Label;
+    private int id;
+    private String label;
 }
