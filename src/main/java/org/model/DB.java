@@ -10,16 +10,15 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public class DB {
-    private String bdd;
-    private String url;
-    private String args;
-    private String user;
-    private String password;
+    private final String bdd;
+    private final String url;
+    private final String args;
+    private final String user;
+    private final String password;
 
     private Connection myConn;
-    private Statement myStmt;
 
-    public void initDB()
+    public DB()
     {
         Properties prop = readPropertiesFile("src\\main\\resources\\config.properties");
         this.bdd = prop.getProperty("bdd");
@@ -29,14 +28,14 @@ public class DB {
         this.password = prop.getProperty("password");
     }
 
-    public void getConn()
+    public Connection getConn()
     {
         try {
             myConn = DriverManager.getConnection(url+bdd+args,user,password);
-            myStmt = myConn.createStatement();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
+        return myConn;
     }
 
     public void closeConn()
