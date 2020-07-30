@@ -11,8 +11,13 @@ public class Classe extends DB {
     // ATTRIBUTS
     private int id;
     private String nom;
-    private Ecole ecole;
-    private ArrayList<Utilisateur> eleves;
+
+    public Ecole ecole;
+    public ArrayList<Utilisateur> eleves;
+
+    public static void main(String[] args) {
+        Classe classe = new Classe(1);
+    }
 
     public int getId() {
         return id;

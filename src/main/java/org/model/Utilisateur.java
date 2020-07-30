@@ -13,8 +13,8 @@ public class Utilisateur extends DB {
     private String prenom;
     private String mail;
 
-    private Groupe groupe;
-    private Ecole ecole;
+    public Groupe groupe;
+    public Ecole ecole;
 
     // CONSTRUCTEUR
     public Utilisateur(Integer id) {
