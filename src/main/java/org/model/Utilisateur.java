@@ -36,6 +36,10 @@ public class Utilisateur extends DB {
         }
     }
 
+    public static void main(String[] args) {
+        Utilisateur utilisateur = new Utilisateur(1);
+    }
+
     // GETTER ET SETTER
     public int getId() {
         return id;
