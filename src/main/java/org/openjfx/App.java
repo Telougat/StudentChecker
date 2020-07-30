@@ -30,6 +30,18 @@ public class App extends Application {
         stage.setWidth(bounds.getWidth());
         stage.setHeight(bounds.getHeight());
 
+        /******************************************** Début page profil  *********************************************/
+
+        HBox barre_navigation = new HBox();
+        VBox layout_general = new VBox();
+
+        layout_general.getChildren().add(barre_navigation);
+
+        var page_profil = new Scene(layout_general, stage.getWidth(), stage.getHeight());
+
+
+        /******************************************** Fin  page profil  *********************************************/
+
         /****************************************** Début page connexion *********************************************/
         GridPane layout_page_login = new GridPane();
 
@@ -41,7 +53,7 @@ public class App extends Application {
         TextField input_nom_utilisateur = new TextField();
 
         Label label_password = new Label("Mot de passe : ");
-        PasswordField input_password = new PasswordField()();
+        PasswordField input_password = new PasswordField();
 
         Button bouton_connexion = new Button("Se connecter");
         GridPane.setHalignment(bouton_connexion, HPos.RIGHT);
@@ -60,6 +72,7 @@ public class App extends Application {
                         alert.setHeaderText("L'id utilisateur est " + idUtilisateur);
 
                         alert.showAndWait();
+                        stage.setScene(page_profil);
                     }
                     else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -92,17 +105,7 @@ public class App extends Application {
         /******************************************** Fin page connexion *********************************************/
 
 
-        /******************************************** Début page profil  *********************************************/
 
-        HBox barre_navigation = new HBox();
-        VBox layout_general = new VBox();
-
-        layout_general.getChildren().add(barre_navigation);
-
-        
-
-
-        /******************************************** Fin  page profil  *********************************************/
 
         stage.setScene(page_login);
         stage.show();
@@ -113,7 +116,9 @@ public class App extends Application {
         HBox layout_barre_navigation = new HBox();
         MenuBar menuBar = new MenuBar();
         EventHandler<ActionEvent> action = changeTab();
+        Label labelTest = new Label("Coucou");
 
+        layout_barre_navigation.getChildren().add(labelTest);
 
 
 
