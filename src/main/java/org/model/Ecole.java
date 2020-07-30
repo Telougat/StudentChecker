@@ -12,6 +12,11 @@ public class Ecole extends DB {
         this.nom = nom;
     }
 
+    public Ecole(int id, String nom) {
+        this.id = id;
+        this.nom = nom;
+    }
+
     // GETTER ET SETTER
     public int getId() {
         return id;
