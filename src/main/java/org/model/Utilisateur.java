@@ -13,8 +13,8 @@ public class Utilisateur extends DB {
     private String prenom;
     private String mail;
 
-    private Groupe groupe;
-    private Ecole ecole;
+    public Groupe groupe;
+    public Ecole ecole;
 
     // CONSTRUCTEUR
     public Utilisateur(Integer id) {
@@ -34,6 +34,10 @@ public class Utilisateur extends DB {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        Utilisateur utilisateur = new Utilisateur(1);
     }
 
     // GETTER ET SETTER
