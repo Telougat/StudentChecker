@@ -17,6 +17,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.model.Login;
 
 /**
  * JavaFX App
@@ -57,7 +58,13 @@ public class App extends Application {
                 {
                     if(input_password.getText().length() > 0)
                     {
+                        Login login = new Login();
+                        int idUtilisateur = login.check(input_nom_utilisateur.getText(), input_password.getText());
+                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                        alert.setTitle("Info connexion");
+                        alert.setHeaderText("L'id utilisateur est " + idUtilisateur);
 
+                        alert.showAndWait();
                     }
                     else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
