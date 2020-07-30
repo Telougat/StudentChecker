@@ -1,4 +1,4 @@
-package org.back;
+package org.model;
 
 public class DB {
 }
