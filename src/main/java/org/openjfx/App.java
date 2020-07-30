@@ -32,7 +32,8 @@ public class App extends Application {
 
         /******************************************** Début page profil  *********************************************/
 
-        HBox barre_navigation = new HBox();
+        HBox barre_navigation = getNavigationBar();
+
         VBox layout_general = new VBox();
 
         layout_general.getChildren().add(barre_navigation);
