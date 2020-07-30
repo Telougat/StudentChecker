@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Classe extends DB {
 
@@ -11,6 +12,7 @@ public class Classe extends DB {
     private int id;
     private String nom;
     private Ecole ecole;
+    private ArrayList<Utilisateur> eleves;
 
     public int getId() {
         return id;
@@ -36,13 +38,13 @@ public class Classe extends DB {
             this.id = id;
             this.nom = rs.getString("Nom");
             this.ecole = new Ecole(rs.getInt("ID_Ecoles"));
-            System.out.println("ID = " + this.id + " nom = " + this.nom + " ecole = " + this.ecole.getNom());
+            // Get all users of classe
+            classe = db.prepareStatement("SELECT ID_Utilisateurs FROM Composition_classes WHERE ID = ?");
+            rs = classe.executeQuery();
+            while(rs.next()) {
+                this.eleves.add(new Utilisateur(rs.getInt("ID_Utilisateurs")));
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-    }
-
-    public static void main(String[] args) {
-        Classe classe = new Classe(1);
-    }
-}
+    }}
