@@ -1,5 +1,10 @@
 package org.model;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Utilisateur extends DB {
 
     // ATTRIBUTS
@@ -7,20 +12,28 @@ public class Utilisateur extends DB {
     private String nom;
     private String prenom;
     private String mail;
-    private String mdp;
 
-    private int id_groupe;
-    private int id_ecole;
+    private Groupe groupe;
+    private Ecole ecole;
 
     // CONSTRUCTEUR
-    public Utilisateur(int id, String nom, String prenom, String mail, String mdp, int id_groupe, int id_ecole) {
-        this.id = id;
-        this.nom = nom;
-        this.prenom = prenom;
-        this.mail = mail;
-        this.mdp = mdp;
-        this.id_groupe = id_groupe;
-        this.id_ecole = id_ecole;
+    public Utilisateur(Integer id) {
+        super();
+        Connection db = this.getConn();
+        try {
+            PreparedStatement classe = db.prepareStatement("SELECT Nom, Prenom, Mail, ID_Groupe, ID_Ecoles FROM Utilisateurs WHERE ID = ?");
+            classe.setInt(1, id);
+            ResultSet rs = classe.executeQuery();
+            rs.next();
+            this.id = id;
+            this.nom = rs.getString("Nom");
+            this.prenom = rs.getString("Prenom");
+            this.mail = rs.getString("Mail");
+            this.groupe = new Groupe(rs.getInt("ID_Groupe"));
+            this.ecole = new Ecole(rs.getInt("ID_Ecoles"));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     // GETTER ET SETTER
@@ -28,56 +41,24 @@ public class Utilisateur extends DB {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public String getNom() {
         return nom;
-    }
-
-    public void setNom(String nom) {
-        this.nom = nom;
     }
 
     public String getPrenom() {
         return prenom;
     }
 
-    public void setPrenom(String prenom) {
-        this.prenom = prenom;
-    }
-
     public String getMail() {
         return mail;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public Groupe getGroupe() {
+        return groupe;
     }
 
-    public String getMdp() {
-        return mdp;
-    }
-
-    public void setMdp(String mdp) {
-        this.mdp = mdp;
-    }
-
-    public int getId_groupe() {
-        return id_groupe;
-    }
-
-    public void setId_groupe(int id_groupe) {
-        this.id_groupe = id_groupe;
-    }
-
-    public int getId_ecole() {
-        return id_ecole;
-    }
-
-    public void setId_ecole(int id_ecole) {
-        this.id_ecole = id_ecole;
+    public Ecole getEcole() {
+        return ecole;
     }
 
     // METHODES
