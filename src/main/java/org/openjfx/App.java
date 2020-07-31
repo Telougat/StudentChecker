@@ -465,14 +465,12 @@ public class App extends Application {
 
         PresenceUtilisateur presenceUtilisateur = utilisateur.getUndeclaredPresence();
         if(presenceUtilisateur != null ) {
-            System.out.println("NON NON");
             Label labelPresence = new Label("Presence " + utilisateur.getUndeclaredPresence());
             Button buttonPresence = new Button("Déclarer sa présence");
             buttonPresence.setOnAction(e -> {
-                System.out.println("OUI OUI");
-                utilisateur.declarePresence(presenceUtilisateur.presence.getId());
                 vbox2.getChildren().remove(labelPresence);
                 vbox2.getChildren().remove(buttonPresence);
+                utilisateur.declarePresence(presenceUtilisateur.presence.getId());
             });
             vbox2.getChildren().add(labelPresence);
             vbox2.getChildren().add(buttonPresence);
