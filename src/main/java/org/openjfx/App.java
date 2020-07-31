@@ -221,30 +221,19 @@ public class App extends Application {
     public VBox getPageGestionClasse()
     {
         VBox layoutPageGestionClasse = new VBox();
-
         Label labelTitre = new Label("Liste des classes");
         labelTitre.setFont(new Font("Arial", 24));
+        ListView listViewClasse = new ListView();
 
-        String classe1 = new String("classe1");
-        String classe2 = new String("classe2");
-        String classe3 = new String("classe3");
+        ObservableList<Classe> classes = FXCollections.observableArrayList(CESI.classe);
+
+
+        ListView<Classe> listClasse = new ListView<Classe>(classes);
         Button addClasse = new Button("Ajouter une Classe");
-        Button modifClasse = new Button("Modifier une Classe");
+        //Button modifClasse = new Button("Modifier une Classe");
         Button deleteClasse = new Button("Supprimer une Classe");
 
-        ObservableList<String> classes = FXCollections.observableArrayList(classe1, classe2, classe3);
-
-        ListView<String> ClasseView = new ListView<String>(classes);
-
-        //ClasseView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-
-        //ClasseView.getSelectionModel().selectIndices(1, 2);
-
-        //ClasseView.getFocusModel().focus(1);
-
-
-
-        layoutPageGestionClasse.getChildren().addAll(labelTitre, ClasseView, addClasse, modifClasse, deleteClasse);
+        layoutPageGestionClasse.getChildren().addAll(labelTitre, listClasse, addClasse, deleteClasse);
 
         return layoutPageGestionClasse;
     }
