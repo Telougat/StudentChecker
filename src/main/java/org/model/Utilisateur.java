@@ -89,6 +89,7 @@ public class Utilisateur extends DB {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                return rtn;
             }
         }
         return rtn;
