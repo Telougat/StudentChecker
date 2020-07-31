@@ -1,6 +1,8 @@
 package org.openjfx;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -16,10 +18,14 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.model.Classe;
-import org.model.Ecole;
-import org.model.Login;
-import org.model.Utilisateur;
+import org.model.*;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.model.Classe.getUtilisateursListByClasseName;
 
 /**
  * JavaFX App
@@ -248,71 +254,136 @@ public class App extends Application {
         HBox corpsPage = new HBox();
         VBox conteneur_elements = new VBox();
 
-        ListView listeEleve = new ListView();
+        ListView affichageListeEleve = new ListView();
         ComboBox<String> cbbClasses = new ComboBox<String>();
 
         for (Classe classe: CESI.classe) {
             cbbClasses.getItems().add(classe.getNom());
         }
 
-        
+        cbbClasses.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                ArrayList<Utilisateur> listeEleve = getUtilisateursListByClasseName(t1);
+                if(!affichageListeEleve.getItems().isEmpty())
+                {
+                    affichageListeEleve.getItems().clear();
+                }
+                for(Utilisateur user: listeEleve)
+                {
+                    affichageListeEleve.getItems().add(user.getNom() + " " + user.getPrenom());
+                }
+            }
+        });
+
+
 
         cbbClasses.setPromptText("Choisissez une classe");
         cbbClasses.setVisibleRowCount(5); // Max 5 éléments visibles
 
         conteneur_elements.getChildren().add(cbbClasses);
-        conteneur_elements.getChildren().add(listeEleve);
+        conteneur_elements.getChildren().add(affichageListeEleve);
 
         VBox layout_boutons = new VBox();
+        layout_boutons.setPadding(new Insets(10,0,0,10));
+        layout_boutons.setSpacing(10);
+
         Button bouton_ajout_eleve = new Button("Ajouter un élève");
         Button bouton_supprimer_eleve = new Button("Supprimer un élève");
-        Button bouton_modifier_eleve = new Button("Modifier un élève");
+        //Button bouton_modifier_eleve = new Button("Modifier un élève");
 
         layout_boutons.getChildren().add(bouton_ajout_eleve);
-        layout_boutons.getChildren().add(bouton_modifier_eleve);
+        //layout_boutons.getChildren().add(bouton_modifier_eleve);
         layout_boutons.getChildren().add(bouton_supprimer_eleve);
 
-        layout_boutons.setPadding(new Insets(15));
+        layout_boutons.setPadding(new Insets(2));
 
-        HBox layout_nom = new HBox();
-        Label label_nom = new Label();
+        VBox layout_champs_insert = new VBox();
+        layout_champs_insert.setPadding(new Insets(10));
+        layout_champs_insert.setSpacing(10);
+
         TextField text_field_nom = new TextField();
-        layout_nom.getChildren().addAll(label_nom,text_field_nom);
-        layout_nom.setPadding(new Insets(15));
+        text_field_nom.setPromptText("Nom");
+        layout_champs_insert.getChildren().add(text_field_nom);
 
-        HBox layout_prenom = new HBox();
-        Label label_prenom = new Label();
         TextField text_field_prenom = new TextField();
-        layout_prenom.getChildren().addAll(label_prenom,text_field_prenom);
-        layout_prenom.setPadding(new Insets(15));
+        text_field_prenom.setPromptText("Prénom");
+        layout_champs_insert.getChildren().add(text_field_prenom);
 
-        HBox layout_mail = new HBox();
-        Label label_mail = new Label();
         TextField text_field_mail = new TextField();
-        layout_mail.getChildren().addAll(label_mail,text_field_mail);
-        layout_mail.setPadding(new Insets(15));
+        text_field_mail.setPromptText("Mail");
+        layout_champs_insert.getChildren().add(text_field_mail);
 
-        HBox layout_password = new HBox();
-        Label label_password = new Label();
         TextField text_field_password = new TextField();
-        layout_password.getChildren().addAll(label_password,text_field_password);
-        layout_password.setPadding(new Insets(15));
+        text_field_password.setPromptText("Mot de passe");
+        layout_champs_insert.getChildren().add(text_field_password);
 
-        HBox layout_classe = new HBox();
-        Label label_classe = new Label();
-        TextField text_field_classe = new TextField();
-        layout_classe.getChildren().addAll(label_classe,text_field_classe);
-        layout_classe.setPadding(new Insets(15));
+        ComboBox cbbClassesDispo = new ComboBox();
+        for (Classe classe: CESI.classe) {
+            cbbClassesDispo.getItems().add(classe.getNom());
+            cbbClassesDispo.setValue(classe.getId());
+        }
+        cbbClassesDispo.setPromptText("Classe");
+        layout_champs_insert.getChildren().add(cbbClassesDispo);
 
-        HBox layout_role = new HBox();
-        Label label_role = new Label();
-        TextField text_field_role = new TextField();
-        layout_role.getChildren().addAll(label_role,text_field_role);
-        layout_role.setPadding(new Insets(15));
+        ComboBox cbbRoles = new ComboBox();
+        cbbRoles.getItems().addAll("Admin","Elève");
+        cbbRoles.setPromptText("Groupe");
+        layout_champs_insert.getChildren().add(cbbRoles);
 
+        Button bouton_valider = new Button("Valider");
+        layout_champs_insert.getChildren().add(bouton_valider);
+
+        layout_champs_insert.setVisible(false);
+        bouton_valider.setOnAction(e -> {
+            if(text_field_nom.getText().length() > 0)
+            {
+                if(text_field_prenom.getText().length() > 0)
+                {
+                    if(text_field_mail.getText().length() > 0)
+                    {
+                        if(text_field_password.getText().length() > 0)
+                        {
+                            if(cbbClassesDispo.getValue() != null)
+                            {
+                                if(cbbRoles.getValue() != null)
+                                {
+                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                    alert.setTitle("Fenêtre de confirmation");
+                                    alert.setHeaderText("Ajout d'un élève");
+                                    alert.setContentText("Voulez-vous vraiment continuer ?");
+
+                                    Optional<ButtonType> result = alert.showAndWait();
+                                    if (result.get() == ButtonType.OK){
+                                        String nom_eleve = text_field_nom.getText();
+                                        String prenom_eleve = text_field_prenom.getText();
+                                        String mail_eleve = text_field_mail.getText();
+                                        String password_eleve = text_field_password.getText();
+                                        String classe_eleve = cbbClassesDispo.getValue().toString();
+                                        String role_eleve = cbbRoles.getValue().toString();
+
+                                        CRUDUtilisateur crud_utilisateur = new CRUDUtilisateur();
+                                        //crud_utilisateur.createUtilisateur(nom_eleve,prenom_eleve,mail_eleve,password_eleve,role_eleve,CESI);
+                                        System.out.println(cbbClassesDispo.getValue().hashCode());
+                                        layout_champs_insert.setVisible(false);
+                                    } else {
+                                        layout_champs_insert.setVisible(true);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        bouton_ajout_eleve.setOnAction(e -> {
+            layout_champs_insert.setVisible(true);
+        });
 
         corpsPage.getChildren().add(conteneur_elements);
         corpsPage.getChildren().add(layout_boutons);
+        corpsPage.getChildren().add(layout_champs_insert);
 
         corpsPage.setPadding(new Insets(15));   
 
