@@ -17,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.model.Classe;
+import org.model.Ecole;
 import org.model.Login;
 import org.model.Utilisateur;
 
@@ -27,6 +28,8 @@ public class App extends Application {
 
     Stage stageGlobal;
     int idUtilisateur;
+
+    Ecole CESI = new Ecole(1);
 
     @Override
     public void start(Stage stage) {
@@ -254,9 +257,23 @@ public class App extends Application {
         labelTitre.setFont(new Font("Arial", 24));
 
         HBox corpsPage = new HBox();
+        VBox conteneur_elements = new VBox();
+
+        ListView listeEleve = new ListView();
+        ComboBox<String> cbbClasses = new ComboBox<String>();
+        cbbClasses.getItems().addAll("RIL","RISR");
+        cbbClasses.setPromptText("Choisissez une classe");
+        cbbClasses.setVisibleRowCount(5); // Max 5 éléments visibles
+
+        conteneur_elements.getChildren().add(cbbClasses);
+        conteneur_elements.getChildren().add(listeEleve);
+
+
+        corpsPage.getChildren().add(conteneur_elements);
 
         layoutPageGestionEleves.setPadding(new Insets(15));
         layoutPageGestionEleves.getChildren().add(labelTitre);
+        layoutPageGestionEleves.getChildren().add(corpsPage);
 
         return layoutPageGestionEleves;
     }
@@ -265,6 +282,7 @@ public class App extends Application {
         GridPane page_profil = new GridPane();
         page_profil.setPadding(new Insets(50, 0, 0, 200));
         page_profil.setVgap(8);
+        //page_profil.setAlignment(Pos.CENTER);
         Utilisateur utilisateur = new Utilisateur(idUtilisateur);
 
         Classe classe = new Classe(utilisateur);
