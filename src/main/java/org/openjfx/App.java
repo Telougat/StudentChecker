@@ -1,6 +1,8 @@
 package org.openjfx;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.model.Classe;
+import org.model.Ecole;
 import org.model.Login;
 import org.model.Utilisateur;
 
@@ -25,6 +28,8 @@ public class App extends Application {
 
     Stage stageGlobal;
     int idUtilisateur;
+
+    Ecole CESI = new Ecole(1);
 
     @Override
     public void start(Stage stage) {
@@ -217,10 +222,29 @@ public class App extends Application {
     {
         VBox layoutPageGestionClasse = new VBox();
 
-        Label labelTitre = new Label("Gestion des classes");
+        Label labelTitre = new Label("Liste des classes");
         labelTitre.setFont(new Font("Arial", 24));
 
-        layoutPageGestionClasse.getChildren().add(labelTitre);
+        String classe1 = new String("classe1");
+        String classe2 = new String("classe2");
+        String classe3 = new String("classe3");
+        Button addClasse = new Button("Ajouter une Classe");
+        Button modifClasse = new Button("Modifier une Classe");
+        Button deleteClasse = new Button("Supprimer une Classe");
+
+        ObservableList<String> classes = FXCollections.observableArrayList(classe1, classe2, classe3);
+
+        ListView<String> ClasseView = new ListView<String>(classes);
+
+        //ClasseView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        //ClasseView.getSelectionModel().selectIndices(1, 2);
+
+        //ClasseView.getFocusModel().focus(1);
+
+
+
+        layoutPageGestionClasse.getChildren().addAll(labelTitre, ClasseView, addClasse, modifClasse, deleteClasse);
 
         return layoutPageGestionClasse;
     }
@@ -233,11 +257,23 @@ public class App extends Application {
         labelTitre.setFont(new Font("Arial", 24));
 
         HBox corpsPage = new HBox();
-        
+        VBox conteneur_elements = new VBox();
 
+        ListView listeEleve = new ListView();
+        ComboBox<String> cbbClasses = new ComboBox<String>();
+        cbbClasses.getItems().addAll("RIL","RISR");
+        cbbClasses.setPromptText("Choisissez une classe");
+        cbbClasses.setVisibleRowCount(5); // Max 5 éléments visibles
+
+        conteneur_elements.getChildren().add(cbbClasses);
+        conteneur_elements.getChildren().add(listeEleve);
+
+
+        corpsPage.getChildren().add(conteneur_elements);
 
         layoutPageGestionEleves.setPadding(new Insets(15));
         layoutPageGestionEleves.getChildren().add(labelTitre);
+        layoutPageGestionEleves.getChildren().add(corpsPage);
 
         return layoutPageGestionEleves;
     }
