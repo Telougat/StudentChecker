@@ -16,7 +16,13 @@ public class Utilisateur extends DB {
     public Ecole ecole;
 
     public static void main(String[] args) {
-        long[] table = Utilisateur.compareTwoTimeStamps(new Timestamp(System.currentTimeMillis()), new Timestamp(1));
+        long[] table = Utilisateur.compareTwoTimeStamps(new Timestamp(System.currentTimeMillis()), new Timestamp(1596205591));
+
+        System.out.println("Current : " + new Timestamp(System.currentTimeMillis()));
+        System.out.println("after : " + new Timestamp(1596205591));
+        for (long item : table) {
+            System.out.println(item);
+        }
     }
 
 
@@ -58,7 +64,7 @@ public class Utilisateur extends DB {
         }
     }
 
-    public static long[]  compareTwoTimeStamps(java.sql.Timestamp currentTime, java.sql.Timestamp oldTime)
+    public static long[]  compareTwoTimeStamps(Timestamp currentTime, Timestamp oldTime)
     {
         long milliseconds1 = oldTime.getTime();
         long milliseconds2 = currentTime.getTime();
@@ -84,8 +90,6 @@ public class Utilisateur extends DB {
                 Timestamp current = new Timestamp(System.currentTimeMillis());
                 Timestamp debut = presence.getDateDebut();
                 Timestamp fin = presence.getDateFin();
-
-
             }
         }
 
