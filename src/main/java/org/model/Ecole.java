@@ -36,12 +36,12 @@ public class Ecole extends DB {
     private void initClassesList() {
         Connection db = this.getConn();
         try {
-            PreparedStatement ps = db.prepareStatement("SELECT ID FROM Classes WHERE ID_Ecoles = ?");
+            PreparedStatement ps = db.prepareStatement("SELECT ID, Nom FROM Classes WHERE ID_Ecoles = ?");
             ps.setInt(1, this.id);
             ResultSet rs = ps.executeQuery();
 
             while(rs.next()) {
-                this.classe.add(new Classe(rs.getInt("ID")));
+                this.classe.add(new Classe(rs.getInt("ID"), rs.getString("Nom"), this));
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
