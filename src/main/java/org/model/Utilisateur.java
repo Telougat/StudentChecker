@@ -15,16 +15,6 @@ public class Utilisateur extends DB {
     public Classe classe;
     public Ecole ecole;
 
-    public static void main(String[] args) {
-        long[] table = Utilisateur.compareTwoTimeStamps(new Timestamp(System.currentTimeMillis()), new Timestamp(1596205591));
-
-        System.out.println("Current : " + new Timestamp(System.currentTimeMillis()));
-        System.out.println("after : " + Timestamp.valueOf("1596205591"));
-        for (long item : table) {
-            System.out.println(item);
-        }
-    }
-
 
     // CONSTRUCTEUR
     public Utilisateur(int id, String nom, String prenom, String mail, Classe classe, int gId, String gLabel, Ecole ecole) {
@@ -64,25 +54,10 @@ public class Utilisateur extends DB {
         }
     }
 
-    public static long[]  compareTwoTimeStamps(Timestamp currentTime, Timestamp oldTime)
-    {
-        long milliseconds1 = oldTime.getTime();
-        long milliseconds2 = currentTime.getTime();
-
-        long diff = milliseconds2 - milliseconds1;
-        long[] table = new long[4];
-
-        table[0] = diff / 1000; //Seconds
-        table[1] = diff / (60 * 1000); //Minutes
-        table[2] = diff / (60 * 60 * 1000); //Hours
-        table[3] = diff / (24 * 60 * 60 * 1000); //Days
-
-        return table;
-    }
-
     public boolean declarePresence(int idPresence) {
+        boolean rtn = false;
         if (this.classe == null) {
-            return false;
+            return rtn;
         }
 
         for (Presence presence : this.classe.presences) {
@@ -91,26 +66,32 @@ public class Utilisateur extends DB {
                 Timestamp debut = presence.getDateDebut();
                 Timestamp fin = presence.getDateFin();
 
+                String status = null;
                 if (current.after(fin)) {
-                    String status = "Absent";
-                } else if (current.after(debut) && current.before(fin))
-                {
-                    String status = "Retard";
+                    status = "Absent";
+                } else if (current.after(debut) && current.before(fin)) {
+                    status = "Retard";
                 } else {
-                    String status = "Présent";
+                    status = "Présent";
+                }
+
+                Connection bd = this.getConn();
+                try {
+                    PreparedStatement ps = bd.prepareStatement("UPDATE Presence_utilisateur SET Status = ?, Date = ? " +
+                            "WHERE ID = ? AND ID_Presences = ?");
+                    ps.setString(1, status);
+                    ps.setTimestamp(2, new Timestamp(System.currentTimeMillis()));
+                    ps.setInt(3, this.id);
+                    ps.setInt(4, presence.getId());
+                    if (ps.executeUpdate() > 0) {
+                        rtn=true;
+                    }
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
                 }
             }
         }
-
-        Connection bd = this.getConn();
-
-        try {
-            PreparedStatement ps = bd.prepareStatement("");
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-
-        return true;
+        return rtn;
     }
 
     public PresenceUtilisateur getUndeclaredPresence() {
@@ -160,18 +141,5 @@ public class Utilisateur extends DB {
 
     public String getMail() {
         return mail;
-    }
-
-    // METHODES
-    public void addUtilisateur() {
-
-    }
-
-    public void modifUtilisateur() {
-
-    }
-
-    public void deleteUtilisateur() {
-
     }
 }
