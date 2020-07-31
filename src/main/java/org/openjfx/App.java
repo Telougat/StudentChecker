@@ -288,9 +288,9 @@ public class App extends Application {
                         LocalDate dateDebut = formDateDebut.getValue();
                         LocalDate dateFin = formDateFin.getValue();
 
-                        LocalDateTime newDateDebut = new LocalDateTime();
-                        DateTimeFormatter dateFormat = DateTimeFormatter.forPattern("yyyy-MM-dd HH:mm:ss");
-                        Timestamp ts = Timestamp.valueOf(newDateDebut.toString(dateFormat));
+                        //LocalDateTime newDateDebut = new LocalDateTime();
+                        //DateTimeFormatter dateFormat = DateTimeFormatter.forPattern("yyyy-MM-dd HH:mm:ss");
+                        //Timestamp ts = Timestamp.valueOf(newDateDebut.toString(dateFormat));
                         //Presence presence = new Presence(1, dateDebut, dateFin);
 
 
