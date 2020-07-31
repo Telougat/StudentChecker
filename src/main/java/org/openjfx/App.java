@@ -10,6 +10,7 @@ import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.model.Login;
@@ -19,10 +20,11 @@ import org.model.Login;
  */
 public class App extends Application {
 
+    Stage stageGlobal;
     @Override
     public void start(Stage stage) {
+        stageGlobal = stage;
 
-        var label = new Label("Accueil");
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
         stage.setX(0);
@@ -114,17 +116,106 @@ public class App extends Application {
 
     public HBox getNavigationBar()
     {
-        HBox layout_barre_navigation = new HBox();
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+
+        Menu menu = new Menu();
         MenuBar menuBar = new MenuBar();
-        EventHandler<ActionEvent> action = changeTab();
-        Label labelTest = new Label("Coucou");
 
-        layout_barre_navigation.getChildren().add(labelTest);
+        Menu menu01 = new Menu("Menu");
+        Menu menu02 = new Menu("Options");
+
+        MenuItem m1 = new MenuItem("Page de profil");
+        MenuItem m2 = new MenuItem("Gestion des élèves");
+        MenuItem m3 = new MenuItem("Gestion des classes");
+
+        menu01.getItems().add(m1);
+        menu01.getItems().add(m2);
+        menu01.getItems().add(m3);
+
+        EventHandler<ActionEvent> event = new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent e)
+            {
+                HBox barre_navigation = getNavigationBar();
+                MenuItem mItem = (MenuItem) e.getSource();
+                String side = mItem.getText();
+                switch(side)
+                {
+                    case "Page de profil" :
+                        System.out.println("page de profil !!!");
+                        stageGlobal.setTitle("Page de profil");
+                        break;
+                    case "Gestion des classes":
+                        VBox layout_gestion_classe_general = new VBox();
+                        VBox gestion_classe = getPageGestionClasse();
+
+                        layout_gestion_classe_general.getChildren().add(barre_navigation);
+                        layout_gestion_classe_general.getChildren().add(gestion_classe);
+
+                        var page_gestion_classe = new Scene(layout_gestion_classe_general, bounds.getWidth(), bounds.getHeight());
+                        stageGlobal.setScene(page_gestion_classe);
+                        stageGlobal.setTitle("Gestion des classes");
+                        break;
+                    case "Gestion des élèves" :
+                        VBox layout_gestion_eleves_general = new VBox();
+                        VBox gestion_eleves = getPageGestionEleves();
+
+                        layout_gestion_eleves_general.getChildren().add(barre_navigation);
+                        layout_gestion_eleves_general.getChildren().add(gestion_eleves);
+
+                        var page_gestion_eleves = new Scene(layout_gestion_eleves_general, bounds.getWidth(), bounds.getHeight());
+                        stageGlobal.setScene(page_gestion_eleves);
+                        stageGlobal.setTitle("Gestion des élèves");
+                        break;
+                }
+            }
+        };
+
+        m1.setOnAction(event);
+        m2.setOnAction(event);
+        m3.setOnAction(event);
+
+        menuBar.getMenus().add(menu);
 
 
+        menuBar.getMenus().addAll(menu01, menu02);
+        menuBar.setMinWidth(300); // do not shrink
+        menuBar.setPrefWidth(bounds.getWidth());
+
+        HBox layout_barre_navigation = new HBox();
+        layout_barre_navigation.getChildren().add(menuBar);
 
 
         return layout_barre_navigation;
+    }
+
+    public VBox getPageGestionClasse()
+    {
+        VBox layoutPageGestionClasse = new VBox();
+
+        Label labelTitre = new Label("Gestion des classes");
+        labelTitre.setFont(new Font("Arial", 24));
+
+        layoutPageGestionClasse.getChildren().add(labelTitre);
+
+        return layoutPageGestionClasse;
+    }
+
+    public VBox getPageGestionEleves()
+    {
+        VBox layoutPageGestionEleves = new VBox();
+
+        Label labelTitre = new Label("Gestion des élèves");
+        labelTitre.setFont(new Font("Arial", 24));
+
+        HBox corpsPage = new HBox();
+        
+
+
+        layoutPageGestionEleves.setPadding(new Insets(15));
+        layoutPageGestionEleves.getChildren().add(labelTitre);
+
+        return layoutPageGestionEleves;
     }
 
     public EventHandler<ActionEvent> changeTab() {
