@@ -274,6 +274,43 @@ public class App extends Application {
 
         layout_boutons.setPadding(new Insets(15));
 
+        HBox layout_nom = new HBox();
+        Label label_nom = new Label();
+        TextField text_field_nom = new TextField();
+        layout_nom.getChildren().addAll(label_nom,text_field_nom);
+        layout_nom.setPadding(new Insets(15));
+
+        HBox layout_prenom = new HBox();
+        Label label_prenom = new Label();
+        TextField text_field_prenom = new TextField();
+        layout_prenom.getChildren().addAll(label_prenom,text_field_prenom);
+        layout_prenom.setPadding(new Insets(15));
+
+        HBox layout_mail = new HBox();
+        Label label_mail = new Label();
+        TextField text_field_mail = new TextField();
+        layout_mail.getChildren().addAll(label_mail,text_field_mail);
+        layout_mail.setPadding(new Insets(15));
+
+        HBox layout_password = new HBox();
+        Label label_password = new Label();
+        TextField text_field_password = new TextField();
+        layout_password.getChildren().addAll(label_password,text_field_password);
+        layout_password.setPadding(new Insets(15));
+
+        HBox layout_classe = new HBox();
+        Label label_classe = new Label();
+        TextField text_field_classe = new TextField();
+        layout_classe.getChildren().addAll(label_classe,text_field_classe);
+        layout_classe.setPadding(new Insets(15));
+
+        HBox layout_role = new HBox();
+        Label label_role = new Label();
+        TextField text_field_role = new TextField();
+        layout_role.getChildren().addAll(label_role,text_field_role);
+        layout_role.setPadding(new Insets(15));
+
+
         corpsPage.getChildren().add(conteneur_elements);
         corpsPage.getChildren().add(layout_boutons);
 
