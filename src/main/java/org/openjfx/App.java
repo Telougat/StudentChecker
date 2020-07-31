@@ -1,6 +1,8 @@
 package org.openjfx;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -16,10 +18,14 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.model.Classe;
-import org.model.Ecole;
-import org.model.Login;
-import org.model.Utilisateur;
+import org.model.*;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.model.Classe.getUtilisateursListByClasseName;
 
 /**
  * JavaFX App
@@ -248,34 +254,149 @@ public class App extends Application {
         HBox corpsPage = new HBox();
         VBox conteneur_elements = new VBox();
 
-        ListView listeEleve = new ListView();
+        ListView affichageListeEleve = new ListView();
         ComboBox<String> cbbClasses = new ComboBox<String>();
 
         for (Classe classe: CESI.classe) {
             cbbClasses.getItems().add(classe.getNom());
         }
 
-        
+        cbbClasses.valueProperty().addListener(new ChangeListener<String>() {
+            @Override public void changed(ObservableValue ov, String t, String t1) {
+                ArrayList<Utilisateur> listeEleve = getUtilisateursListByClasseName(t1);
+                if(!affichageListeEleve.getItems().isEmpty())
+                {
+                    affichageListeEleve.getItems().clear();
+                }
+                for(Utilisateur user: listeEleve)
+                {
+                    affichageListeEleve.getItems().add(user.getNom() + " " + user.getPrenom());
+                }
+            }
+        });
+
+
 
         cbbClasses.setPromptText("Choisissez une classe");
         cbbClasses.setVisibleRowCount(5); // Max 5 éléments visibles
 
         conteneur_elements.getChildren().add(cbbClasses);
-        conteneur_elements.getChildren().add(listeEleve);
+        conteneur_elements.getChildren().add(affichageListeEleve);
 
         VBox layout_boutons = new VBox();
+        layout_boutons.setPadding(new Insets(10,0,0,10));
+        layout_boutons.setSpacing(10);
+
         Button bouton_ajout_eleve = new Button("Ajouter un élève");
         Button bouton_supprimer_eleve = new Button("Supprimer un élève");
-        Button bouton_modifier_eleve = new Button("Modifier un élève");
+        //Button bouton_modifier_eleve = new Button("Modifier un élève");
 
         layout_boutons.getChildren().add(bouton_ajout_eleve);
-        layout_boutons.getChildren().add(bouton_modifier_eleve);
+        //layout_boutons.getChildren().add(bouton_modifier_eleve);
         layout_boutons.getChildren().add(bouton_supprimer_eleve);
 
-        layout_boutons.setPadding(new Insets(15));
+        layout_boutons.setPadding(new Insets(2));
+
+        VBox layout_champs_insert = new VBox();
+        layout_champs_insert.setPadding(new Insets(10));
+        layout_champs_insert.setSpacing(10);
+
+        TextField text_field_nom = new TextField();
+        text_field_nom.setPromptText("Nom");
+        layout_champs_insert.getChildren().add(text_field_nom);
+
+        TextField text_field_prenom = new TextField();
+        text_field_prenom.setPromptText("Prénom");
+        layout_champs_insert.getChildren().add(text_field_prenom);
+
+        TextField text_field_mail = new TextField();
+        text_field_mail.setPromptText("Mail");
+        layout_champs_insert.getChildren().add(text_field_mail);
+
+        TextField text_field_password = new TextField();
+        text_field_password.setPromptText("Mot de passe");
+        layout_champs_insert.getChildren().add(text_field_password);
+
+        ComboBox cbbClassesDispo = new ComboBox();
+        for (Classe classe: CESI.classe) {
+            cbbClassesDispo.getItems().add(classe.getNom());
+        }
+        cbbClassesDispo.setPromptText("Classe");
+        layout_champs_insert.getChildren().add(cbbClassesDispo);
+
+        ComboBox cbbRoles = new ComboBox();
+        cbbRoles.getItems().addAll("Admin","Elève");
+        cbbRoles.setPromptText("Groupe");
+        layout_champs_insert.getChildren().add(cbbRoles);
+
+        Button bouton_valider = new Button("Valider");
+        layout_champs_insert.getChildren().add(bouton_valider);
+
+        layout_champs_insert.setVisible(false);
+        bouton_valider.setOnAction(e -> {
+            if(text_field_nom.getText().length() > 0)
+            {
+                if(text_field_prenom.getText().length() > 0)
+                {
+                    if(text_field_mail.getText().length() > 0)
+                    {
+                        if(text_field_password.getText().length() > 0)
+                        {
+                            if(cbbClassesDispo.getValue() != null)
+                            {
+                                if(cbbRoles.getValue() != null)
+                                {
+                                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                                    alert.setTitle("Fenêtre de confirmation");
+                                    alert.setHeaderText("Ajout d'un élève");
+                                    alert.setContentText("Voulez-vous vraiment continuer ?");
+
+                                    Optional<ButtonType> result = alert.showAndWait();
+                                    if (result.get() == ButtonType.OK){
+                                        String nom_eleve = text_field_nom.getText();
+                                        String prenom_eleve = text_field_prenom.getText();
+                                        String mail_eleve = text_field_mail.getText();
+                                        String password_eleve = text_field_password.getText();
+                                        String classe_eleve = cbbClassesDispo.getValue().toString();
+                                        String role_eleve = cbbRoles.getValue().toString();
+
+                                        CRUDUtilisateur crud_utilisateur = new CRUDUtilisateur();
+                                        Utilisateur nouvelUtilisateur = crud_utilisateur.createUtilisateur(nom_eleve,prenom_eleve,mail_eleve,password_eleve,Groupe.getGroupByName(role_eleve),CESI);
+                                        Classe obj_classe_eleve = null;
+                                        for (Classe classe: CESI.classe) {
+                                            if(classe.getNom().equals(classe_eleve))
+                                            {
+                                                obj_classe_eleve = classe;
+                                            }
+                                        }
+                                        if(obj_classe_eleve != null)
+                                        {
+                                            crud_utilisateur.linkToClasse(nouvelUtilisateur,obj_classe_eleve);
+                                        }
+                                        else {
+                                            System.out.println("Erreur sur la classe");
+                                        }
+
+                                        layout_champs_insert.setVisible(false);
+                                    } else {
+                                        layout_champs_insert.setVisible(true);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        bouton_ajout_eleve.setOnAction(e -> {
+            layout_champs_insert.setVisible(true);
+        });
 
         corpsPage.getChildren().add(conteneur_elements);
         corpsPage.getChildren().add(layout_boutons);
+        corpsPage.getChildren().add(layout_champs_insert);
 
         corpsPage.setPadding(new Insets(15));   
 
