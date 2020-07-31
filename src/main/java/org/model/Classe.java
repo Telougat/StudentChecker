@@ -17,11 +17,12 @@ public class Classe extends DB {
     public ArrayList<Utilisateur> eleves;
 
     // CONSTRUCTEUR
-    public Classe(int id, String nom, Presence presence, Ecole ecole) {
+    public Classe(int id, String nom, Ecole ecole) {
         this.id = id;
         this.nom = nom;
         this.ecole = ecole;
         this.generateUtilisateursList();
+        this.generatePresencesList();
     }
 
     public Classe(Integer id) {
@@ -108,6 +109,28 @@ public class Classe extends DB {
                 String gLabel = rs.getString("gLabel");
                 Utilisateur user = new Utilisateur(uId, nom, prenom, mail, this, gId, gLabel, this.ecole);
                 this.eleves.add(user);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void generatePresencesList() {
+        Connection db = this.getConn();
+        try {
+            PreparedStatement ps = db.prepareStatement("SELECT ID, Debut, Fin FROM Presences as p " +
+                    "INNER JOIN Presence_classe as pc ON pc.ID = p.ID AND pc.ID_Classes = ? " +
+                    "GROUP BY p.ID");
+            ps.setInt(1, this.id);
+            ResultSet rs = ps.executeQuery();
+            this.presences = new ArrayList<Presence>();
+            while (rs.next()) {
+                int id = rs.getInt("ID");
+                Timestamp debut = rs.getTimestamp("Debut");
+                Timestamp fin = rs.getTimestamp("Fin");
+                Presence presence = new Presence(id, debut, fin);
+                this.presences.add(presence);
             }
 
         } catch (SQLException ex) {

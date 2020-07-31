@@ -1,9 +1,6 @@
 package org.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -11,13 +8,20 @@ public class Presence extends DB {
 
     // ATTRIBUTS
     private int id;
-    private Date date_debut;
-    private Date date_fin;
+    private Timestamp date_debut;
+    private Timestamp date_fin;
 
     public Classe classe;
     public ArrayList<PresenceUtilisateur> presencesUtilisateurs;
 
     // CONSTRUCTEUR
+
+    public Presence (int id, Timestamp debut, Timestamp fin) {
+        this.id = id;
+        this.date_debut = debut;
+        this.date_fin = fin;
+    }
+
     public Presence(int id) {
         super();
         Connection db = this.getConn();
@@ -27,8 +31,8 @@ public class Presence extends DB {
             ResultSet rs = presence.executeQuery();
             rs.next();
             this.id = id;
-            this.date_debut = rs.getDate("Debut");
-            this.date_fin = rs.getDate("Fin");
+            this.date_debut = rs.getTimestamp("Debut");
+            this.date_fin = rs.getTimestamp("Fin");
             this.classe = new Classe(rs.getInt("ID_Classes"));
 
             PreparedStatement getPresenceUtilisateur = db.prepareStatement("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE ID_Presences = ?");
@@ -50,11 +54,11 @@ public class Presence extends DB {
         return id;
     }
 
-    public Date getDateDebut() {
+    public Timestamp getDateDebut() {
         return date_debut;
     }
 
-    public Date getDateFin() {
+    public Timestamp getDateFin() {
         return date_fin;
     }
 }

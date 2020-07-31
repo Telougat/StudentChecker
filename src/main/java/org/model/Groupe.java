@@ -33,6 +33,21 @@ public class Groupe extends DB {
         }
     }
 
+    public static Groupe getGroupByName(String nom) {
+        Groupe grp = null;
+        Connection db = new DB().getConn();
+        try {
+            PreparedStatement groupe = db.prepareStatement("SELECT ID FROM Groupe WHERE Label = ?");
+            groupe.setString(1, nom);
+            ResultSet rs = groupe.executeQuery();
+            rs.next();
+            grp = new Groupe(rs.getInt("ID"));
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return grp;
+    }
+
     // GETTER ET SETTER
     public int getId() {
         return id;

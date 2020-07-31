@@ -1,15 +1,14 @@
 package org.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class CRUDUtilisateur extends DB {
 
-    public boolean createUtilisateur(String nom, String prenom, String mail, String mdp, Groupe groupe, Ecole ecole) {
+    public Utilisateur createUtilisateur(String nom, String prenom, String mail, String mdp, Groupe groupe, Ecole ecole) {
+        Utilisateur util = null;
         try {
             Connection db = this.getConn();
-            PreparedStatement ps = db.prepareStatement("INSERT INTO Utilisateurs(Nom, Prenom, Mail, Mot_de_passe, ID_Groupe, ID_Ecoles) VALUES (? , ? , ? , ? , ? , ?)");
+            PreparedStatement ps = db.prepareStatement("INSERT INTO Utilisateurs(Nom, Prenom, Mail, Mot_de_passe, ID_Groupe, ID_Ecoles) VALUES (? , ? , ? , ? , ? , ?)", Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, nom);
             ps.setString(2, prenom);
             ps.setString(3, mail);
@@ -17,14 +16,16 @@ public class CRUDUtilisateur extends DB {
             ps.setInt(5, groupe.getId());
             ps.setInt(6, ecole.getId());
             int rows = ps.executeUpdate();
-            if (rows <= 0) {
-                return false;
+            if (rows > 0) {
+                ResultSet rs = ps.getGeneratedKeys();
+                rs.next();
+                util = new Utilisateur(rs.getInt(1), nom, prenom, mail, groupe.getId(), groupe.getLabel());
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
 
-        return true;
+        return util;
     }
 
     public boolean removeFromClasse(Utilisateur utilisateur, Classe classe) {
