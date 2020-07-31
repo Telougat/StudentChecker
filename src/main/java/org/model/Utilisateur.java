@@ -53,13 +53,54 @@ public class Utilisateur extends DB {
         }
     }
 
+    public static long[]  compareTwoTimeStamps(java.sql.Timestamp currentTime, java.sql.Timestamp oldTime)
+    {
+        long milliseconds1 = oldTime.getTime();
+        long milliseconds2 = currentTime.getTime();
+
+        long diff = milliseconds2 - milliseconds1;
+        long[] table = new long[4];
+
+        table[0] = diff / 1000;
+        table[1] = diff / (60 * 1000);
+        table[2] = diff / (60 * 60 * 1000);
+        table[3] = diff / (24 * 60 * 60 * 1000);
+
+        return table;
+    }
+
+    public boolean declarePresence(int idPresence) {
+        if (this.classe == null) {
+            return false;
+        }
+
+        for (Presence presence : this.classe.presences) {
+            if (presence.getId() == idPresence) {
+                Timestamp current = new Timestamp(System.currentTimeMillis());
+                Timestamp debut = presence.getDateDebut();
+                Timestamp fin = presence.getDateFin();
+
+
+            }
+        }
+
+        Connection bd = this.getConn();
+
+        try {
+            PreparedStatement ps = bd.prepareStatement("");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return true;
+    }
+
     public ArrayList<PresenceUtilisateur> getUndeclaredPresences() {
         Connection db = this.getConn();
         ArrayList<PresenceUtilisateur> presences = new ArrayList<PresenceUtilisateur>();
         try {
             Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE Status = 'En attente'");
-
+            ResultSet rs = st.executeQuery("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE ID = " + this.id + " Status = 'En attente'");
             while (rs.next()) {
                 presences.add(new PresenceUtilisateur(rs.getInt("ID_Presences"), rs.getInt("ID")));
             }
