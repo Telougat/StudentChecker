@@ -226,6 +226,7 @@ public class App extends Application {
     public VBox getPageGestionClasse()
     {
         VBox layoutPageGestionClasse = new VBox();
+        VBox vboxBouton = new VBox();
         Label labelTitre = new Label("Liste des classes");
         labelTitre.setFont(new Font("Arial", 24));
 
@@ -236,7 +237,9 @@ public class App extends Application {
         //Button modifClasse = new Button("Modifier une Classe");
         Button deleteClasse = new Button("Supprimer une Classe");
 
-        layoutPageGestionClasse.getChildren().addAll(labelTitre, listClasse, addClasse, deleteClasse);
+        vboxBouton.getChildren().addAll(addClasse, deleteClasse);
+
+        layoutPageGestionClasse.getChildren().addAll(labelTitre, listClasse, vboxBouton);
 
 //        addClasse.setOnAction(new EventHandler<ActionEvent>() {
 //            public void handle(ActionEvent e)
@@ -273,7 +276,7 @@ public class App extends Application {
 //                }
 //            }
 //        }
-        return layoutPageGestionClasse;
+    return layoutPageGestionClasse;
     }
 
     public VBox getPageGestionEleves()
@@ -446,8 +449,8 @@ public class App extends Application {
         HBox hbox = new HBox();
         vbox1.setSpacing(20);
         vbox2.setSpacing(20);
-        vbox1.setPadding(new Insets(50));
-        vbox2.setPadding(new Insets(50, 0, 50, 50));
+        //vbox1.setPadding(new Insets(50));
+        //vbox2.setPadding(new Insets(50, 0, 50, 50));
 
         Utilisateur utilisateur = new Utilisateur(idUtilisateur);
 
@@ -460,11 +463,23 @@ public class App extends Application {
         Label labelGroupe = new Label("Votre Groupe : " + utilisateur.groupe.getLabel());
         Label labelClasse = new Label("Votre Classe : " + classe.getNom());
 
-        ObservableList<PresenceUtilisateur> presenceUtilisateurs = FXCollections.observableArrayList(utilisateur.getUndeclaredPresences());
+        PresenceUtilisateur presenceUtilisateur = utilisateur.getUndeclaredPresence();
+        if(presenceUtilisateur != null ) {
+            System.out.println("NON NON");
+            Label labelPresence = new Label("Presence " + utilisateur.getUndeclaredPresences());
+            Button buttonPresence = new Button("Déclarer sa présence");
+            buttonPresence.setOnAction(e -> {
+                System.out.println("OUI OUI");
+                utilisateur.declarePresence(presenceUtilisateur.presence.getId());
+            });
+            vbox2.getChildren().add(labelPresence);
+            vbox2.getChildren().add(buttonPresence);
+        }
+        //ObservableList<PresenceUtilisateur> presenceUtilisateurs = FXCollections.observableArrayList(utilisateur.getUndeclaredPresences());
 
-        ListView<PresenceUtilisateur> presenceUser = new ListView<PresenceUtilisateur>(presenceUtilisateurs);
+        //ListView<PresenceUtilisateur> presenceUser = new ListView<PresenceUtilisateur>(presenceUtilisateurs);
 
-        Button buttonPresence = new Button("Déclarer sa présence");
+
 
         vbox1.getChildren().add(labelTest);
         vbox1.getChildren().add(labelNom);
@@ -473,8 +488,7 @@ public class App extends Application {
         vbox1.getChildren().add(labelGroupe);
         vbox1.getChildren().add(labelClasse);
 
-        vbox2.getChildren().add(presenceUser);
-        vbox2.getChildren().add(buttonPresence);
+
         hbox.getChildren().addAll(vbox1, vbox2);
 
         page_profil.getChildren().add(hbox);
