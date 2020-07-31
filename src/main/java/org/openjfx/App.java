@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.model.Classe;
 import org.model.Ecole;
 import org.model.Login;
 import org.model.Utilisateur;
@@ -235,7 +236,6 @@ public class App extends Application {
         labelTitre.setFont(new Font("Arial", 24));
 
         HBox corpsPage = new HBox();
-
         VBox conteneur_elements = new VBox();
 
         ListView listeEleve = new ListView();
@@ -254,22 +254,24 @@ public class App extends Application {
         layoutPageGestionEleves.getChildren().add(labelTitre);
         layoutPageGestionEleves.getChildren().add(corpsPage);
 
-
         return layoutPageGestionEleves;
     }
 
     public GridPane getPageProfil() {
         GridPane page_profil = new GridPane();
-        page_profil.setPadding(new Insets(400.0D));
-        page_profil.setVgap(8.0D);
-        page_profil.setAlignment(Pos.CENTER);
-        EventHandler<ActionEvent> action = this.changeTab();
-        Label labelTest = new Label("Bonjour Michel");
-        Label labelNom = new Label("Votre Nom :");
-        Label labelPrenom = new Label("Votre Prenom :");
-        Label labelMail = new Label("Votre Mail :");
-        Label labelGroupe = new Label("Votre Groupe :");
-        Label labelClasse = new Label("Votre Classe :");
+        page_profil.setPadding(new Insets(50, 0, 0, 200));
+        page_profil.setVgap(8);
+        //page_profil.setAlignment(Pos.CENTER);
+        Utilisateur utilisateur = new Utilisateur(idUtilisateur);
+
+        Classe classe = new Classe(utilisateur);
+
+        Label labelTest = new Label("Bonjour " + utilisateur.getPrenom() + " " + utilisateur.getNom());
+        Label labelNom = new Label("Votre Nom : " + utilisateur.getNom());
+        Label labelPrenom = new Label("Votre Prenom : " + utilisateur.getPrenom());
+        Label labelMail = new Label("Votre Mail : " + utilisateur.getMail());
+        Label labelGroupe = new Label("Votre Groupe : " + utilisateur.groupe.getLabel());
+        Label labelClasse = new Label("Votre Classe : " + classe.getNom());
         Button buttonPresence = new Button("Déclarer sa présence");
         page_profil.add(labelTest, 0, 0);
         page_profil.add(labelNom, 0, 4);

@@ -116,9 +116,26 @@ public class Classe extends DB {
             linkClasse.setInt(1, id);
             linkClasse.setInt(2, this.id);
             linkClasse.executeUpdate();
+
+            addUtilisateursToPresence(id);
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
         return true;
+    }
+
+    private void addUtilisateursToPresence(int id) {
+        Connection db = this.getConn();
+        try {
+            for (Utilisateur user : this.eleves) {
+                PreparedStatement ps = db.prepareStatement("INSERT INTO Presence_utilisateur(ID, ID_Presences, Status) VALUES (? , ? , ?)");
+                ps.setInt(1, user.getId());
+                ps.setInt(2, id);
+                ps.setString(3, "En attente");
+                ps.executeUpdate();
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 }

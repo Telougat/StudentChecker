@@ -1,9 +1,7 @@
 package org.model;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
+import java.util.ArrayList;
 
 public class Utilisateur extends DB {
 
@@ -36,8 +34,20 @@ public class Utilisateur extends DB {
         }
     }
 
-    public static void main(String[] args) {
-        Utilisateur utilisateur = new Utilisateur(1);
+    public ArrayList<PresenceUtilisateur> getUndeclaredPresences() {
+        Connection db = this.getConn();
+        ArrayList<PresenceUtilisateur> presences = new ArrayList<PresenceUtilisateur>();
+        try {
+            Statement st = db.createStatement();
+            ResultSet rs = st.executeQuery("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE Status = `En attente`");
+
+            while (rs.next()) {
+                presences.add(new PresenceUtilisateur(rs.getInt("ID_Presences"), rs.getInt("ID")));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return presences;
     }
 
     // GETTER ET SETTER
