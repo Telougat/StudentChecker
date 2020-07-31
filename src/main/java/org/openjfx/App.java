@@ -449,7 +449,7 @@ public class App extends Application {
         HBox hbox = new HBox();
         vbox1.setSpacing(20);
         vbox2.setSpacing(20);
-        //vbox1.setPadding(new Insets(50));
+        //vbox1.setPadding(new Insets(10, 10, 10, 10));
         //vbox2.setPadding(new Insets(50, 0, 50, 50));
 
         Utilisateur utilisateur = new Utilisateur(idUtilisateur);
