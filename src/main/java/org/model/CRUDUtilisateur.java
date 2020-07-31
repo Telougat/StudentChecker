@@ -90,6 +90,9 @@ public class CRUDUtilisateur extends DB {
         try {
             Connection db = this.getConn();
 
+            Statement st = db.createStatement();
+            st.executeQuery("SET FOREIGN_KEY_CHECKS=0");
+
             PreparedStatement dPresence = db.prepareStatement("DELETE FROM Presence_utilisateur WHERE ID = ?");
             dPresence.setInt(1, utilisateur.getId());
             dPresence.executeUpdate();
@@ -102,6 +105,7 @@ public class CRUDUtilisateur extends DB {
             ps.setInt(1, utilisateur.getId());
             int rows = ps.executeUpdate();
 
+            st.executeQuery("SET FOREIGN_KEY_CHECKS=1");
             if (rows <= 0) {
                 return false;
             }
