@@ -23,6 +23,15 @@ public class Utilisateur extends DB {
         this.mail = mail;
         this.classe = classe;
         this.groupe = new Groupe(gId, gLabel);
+        this.ecole = ecole;
+    }
+
+    public Utilisateur(int id, String nom, String prenom, String mail, int gId, String gLabel) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.mail = mail;
+        this.groupe = new Groupe(gId, gLabel);
     }
 
     public Utilisateur(Integer id) {
@@ -42,6 +51,23 @@ public class Utilisateur extends DB {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public boolean declarePresence(int idPresence) {
+        if (this.classe == null) {
+            return false;
+        }
+
+        this.classe.
+
+        Connection bd = this.getConn();
+        try {
+            PreparedStatement ps = bd.prepareStatement("");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return true;
     }
 
     public ArrayList<PresenceUtilisateur> getUndeclaredPresences() {

@@ -13,10 +13,11 @@ public class Classe extends DB {
     private String nom;
 
     public Ecole ecole;
+    public ArrayList<Presence> presences;
     public ArrayList<Utilisateur> eleves;
 
     // CONSTRUCTEUR
-    public Classe(int id, String nom, Ecole ecole) {
+    public Classe(int id, String nom, Presence presence, Ecole ecole) {
         this.id = id;
         this.nom = nom;
         this.ecole = ecole;
@@ -34,8 +35,6 @@ public class Classe extends DB {
             this.id = id;
             this.nom = rs.getString("Nom");
             this.ecole = new Ecole(rs.getInt("ID_Ecoles"));
-
-            this.generateUtilisateursList();
 
             db.close();
         } catch (SQLException ex) {
@@ -61,7 +60,36 @@ public class Classe extends DB {
         }
     }
 
-    private void generateUtilisateursList() {
+    public static ArrayList<Utilisateur> getUtilisateursListByClasseName(String nom) {
+        ArrayList<Utilisateur> utilisateurs = new ArrayList<Utilisateur>();
+        Connection db = new DB().getConn();
+        try {
+            PreparedStatement ps = db.prepareStatement("SELECT u.ID as uId, u.Nom as uNom, u.Prenom as uPrenom, u.Mail as uMail, g.ID as gId, g.Label as gLabel FROM Utilisateurs as u " +
+                    "INNER JOIN Composition_classes as cc ON cc.ID_Utilisateurs = u.ID " +
+                    "INNER JOIN Classes as c ON c.ID = cc.ID " +
+                    "INNER JOIN Groupe as g ON g.ID = u.ID_Groupe " +
+                    "WHERE c.Nom = ? GROUP BY u.ID");
+
+            ps.setString(1, nom);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                int uId = rs.getInt("uId");
+                String uNom = rs.getString("uNom");
+                String prenom = rs.getString("uPrenom");
+                String mail = rs.getString("uMail");
+                int gId = rs.getInt("gId");
+                String gLabel = rs.getString("gLabel");
+                utilisateurs.add(new Utilisateur(uId, uNom, prenom, mail, gId, gLabel));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return utilisateurs;
+    }
+
+    public void generateUtilisateursList() {
         Connection db = this.getConn();
         try {
             PreparedStatement ps = db.prepareStatement("SELECT u.ID as uId, u.Nom as uNom, u.Prenom as uPrenom, u.Mail as uMail, g.ID as gId, g.Label as gLabel FROM Utilisateurs as u " +

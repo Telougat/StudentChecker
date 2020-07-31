@@ -14,6 +14,7 @@ public class Ecole extends DB {
 
     public ArrayList<Classe> classe;
 
+
     // CONSTRUCTEUR
     public Ecole(int id) {
         super();
