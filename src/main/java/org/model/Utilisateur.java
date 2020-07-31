@@ -57,7 +57,8 @@ public class Utilisateur extends DB {
     public boolean declarePresence(int idPresence) {
         boolean rtn = false;
         if (this.classe == null) {
-            return rtn;
+            this.classe = new Classe(this);
+            this.classe.generatePresencesList();
         }
 
         for (Presence presence : this.classe.presences) {
@@ -89,6 +90,7 @@ public class Utilisateur extends DB {
                 } catch (SQLException ex) {
                     ex.printStackTrace();
                 }
+                return rtn;
             }
         }
         return rtn;
