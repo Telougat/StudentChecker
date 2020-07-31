@@ -27,7 +27,7 @@ public class App extends Application {
     Stage stageGlobal;
     int idUtilisateur;
 
-    Ecole CESI = new Ecole(1);
+    //Ecole CESI = new Ecole(1);
 
     @Override
     public void start(Stage stage) {
@@ -247,8 +247,21 @@ public class App extends Application {
         conteneur_elements.getChildren().add(cbbClasses);
         conteneur_elements.getChildren().add(listeEleve);
 
+        VBox layout_boutons = new VBox();
+        Button bouton_ajout_eleve = new Button("Ajouter un élève");
+        Button bouton_supprimer_eleve = new Button("Supprimer un élève");
+        Button bouton_modifier_eleve = new Button("Modifier un élève");
+
+        layout_boutons.getChildren().add(bouton_ajout_eleve);
+        layout_boutons.getChildren().add(bouton_modifier_eleve);
+        layout_boutons.getChildren().add(bouton_supprimer_eleve);
+
+        layout_boutons.setPadding(new Insets(15));
 
         corpsPage.getChildren().add(conteneur_elements);
+        corpsPage.getChildren().add(layout_boutons);
+
+        corpsPage.setPadding(new Insets(15));   
 
         layoutPageGestionEleves.setPadding(new Insets(15));
         layoutPageGestionEleves.getChildren().add(labelTitre);
