@@ -14,6 +14,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import org.model.Classe;
 import org.model.Login;
 import org.model.Utilisateur;
 
@@ -258,13 +259,14 @@ public class App extends Application {
         page_profil.setAlignment(Pos.CENTER);
         Utilisateur utilisateur = new Utilisateur(idUtilisateur);
 
+        Classe classe = new Classe(utilisateur);
 
         Label labelTest = new Label("Bonjour " + utilisateur.getPrenom() + " " + utilisateur.getNom());
         Label labelNom = new Label("Votre Nom : " + utilisateur.getNom());
         Label labelPrenom = new Label("Votre Prenom : " + utilisateur.getPrenom());
         Label labelMail = new Label("Votre Mail : " + utilisateur.getMail());
         Label labelGroupe = new Label("Votre Groupe : " + utilisateur.groupe.getLabel());
-        Label labelClasse = new Label("Votre Classe : ");
+        Label labelClasse = new Label("Votre Classe : " + classe.getNom());
         Button buttonPresence = new Button("Déclarer sa présence");
         page_profil.add(labelTest, 0, 0);
         page_profil.add(labelNom, 0, 4);
