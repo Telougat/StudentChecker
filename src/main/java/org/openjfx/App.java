@@ -225,16 +225,15 @@ public class App extends Application {
         labelTitre.setFont(new Font("Arial", 24));
         ListView listViewClasse = new ListView();
 
-        for (Classe classe : CESI.classe) {
-            //classe.getNom();
-            listViewClasse.getItems().add(classe.getNom());
-        }
+        ObservableList<Classe> classes = FXCollections.observableArrayList(CESI.classe);
 
+
+        ListView<Classe> listClasse = new ListView<Classe>(classes);
         Button addClasse = new Button("Ajouter une Classe");
-        Button modifClasse = new Button("Modifier une Classe");
+        //Button modifClasse = new Button("Modifier une Classe");
         Button deleteClasse = new Button("Supprimer une Classe");
 
-        layoutPageGestionClasse.getChildren().addAll(labelTitre, listViewClasse, addClasse, modifClasse, deleteClasse);
+        layoutPageGestionClasse.getChildren().addAll(labelTitre, listClasse, addClasse, deleteClasse);
 
         return layoutPageGestionClasse;
     }
