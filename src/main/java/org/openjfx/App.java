@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.model.Login;
+import org.model.Utilisateur;
 
 /**
  * JavaFX App
@@ -27,6 +28,7 @@ public class App extends Application {
     @Override
     public void start(Stage stage) {
         stageGlobal = stage;
+        stageGlobal.setResizable(false);
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
@@ -63,9 +65,11 @@ public class App extends Application {
 
                         if(idUtilisateur != -1)
                         {
+                            Utilisateur utilisateur = new Utilisateur(idUtilisateur);
+
                             VBox layout_page_profil_general = new VBox();
                             GridPane profil = getPageProfil();
-                            if(true) // check role admin
+                            if(utilisateur.groupe.getLabel().equals("Admin")) // check role admin
                             {
                                 HBox barre_navigation = getNavigationBar();
 
