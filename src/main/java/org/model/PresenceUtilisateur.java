@@ -17,11 +17,12 @@ public class PresenceUtilisateur extends DB {
             presenceUtilisateur.setInt(1, utilisateur);
             presenceUtilisateur.setInt(2, presence);
             ResultSet rs = presenceUtilisateur.executeQuery();
-            rs.next();
-            this.status = rs.getString("Status");
-            this.present = rs.getTimestamp("Date");
-            this.presence = new Presence(rs.getInt("ID_Presences"));
-            this.utilisateur = new Utilisateur(rs.getInt("ID"));
+            if (rs.next()) {
+                this.status = rs.getString("Status");
+                this.present = rs.getTimestamp("Date");
+                this.presence = new Presence(rs.getInt("ID_Presences"));
+                this.utilisateur = new Utilisateur(rs.getInt("ID"));
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
