@@ -53,6 +53,23 @@ public class Utilisateur extends DB {
         }
     }
 
+    public boolean declarePresence(int idPresence) {
+        if (this.classe == null) {
+            return false;
+        }
+
+        this.classe.
+
+        Connection bd = this.getConn();
+        try {
+            PreparedStatement ps = bd.prepareStatement("");
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+
+        return true;
+    }
+
     public ArrayList<PresenceUtilisateur> getUndeclaredPresences() {
         Connection db = this.getConn();
         ArrayList<PresenceUtilisateur> presences = new ArrayList<PresenceUtilisateur>();

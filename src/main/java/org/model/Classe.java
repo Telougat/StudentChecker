@@ -13,10 +13,11 @@ public class Classe extends DB {
     private String nom;
 
     public Ecole ecole;
+    public ArrayList<Presence> presences;
     public ArrayList<Utilisateur> eleves;
 
     // CONSTRUCTEUR
-    public Classe(int id, String nom, Ecole ecole) {
+    public Classe(int id, String nom, Presence presence, Ecole ecole) {
         this.id = id;
         this.nom = nom;
         this.ecole = ecole;

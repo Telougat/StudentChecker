@@ -45,6 +45,11 @@ public class PresenceUtilisateur extends DB {
         }
     }*/
 
+    @Override
+    public String toString() {
+        return "Présence à déclarer avant le " + this.presence.getDateDebut() + " retard comptabilisé jusqu'au " + this.presence.getDateFin() + " au delà Absent";
+    }
+
     public String getStatus() {
         return status;
     }

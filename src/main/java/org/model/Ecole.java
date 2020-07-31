@@ -14,12 +14,6 @@ public class Ecole extends DB {
 
     public ArrayList<Classe> classe;
 
-    public static void main(String[] args) {
-        ArrayList<Utilisateur> users = Classe.getUtilisateursListByClasseName("RIL 2020");
-        for (Utilisateur util : users) {
-            System.out.println("Nom : " + util.getNom());
-        }
-    }
 
     // CONSTRUCTEUR
     public Ecole(int id) {
