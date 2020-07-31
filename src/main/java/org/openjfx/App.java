@@ -16,10 +16,7 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
-import org.model.Classe;
-import org.model.Ecole;
-import org.model.Login;
-import org.model.Utilisateur;
+import org.model.*;
 
 /**
  * JavaFX App
@@ -220,10 +217,12 @@ public class App extends Application {
 
     public VBox getPageGestionClasse()
     {
+        double width = stageGlobal.getWidth();
+        double height = stageGlobal.getHeight();
+
         VBox layoutPageGestionClasse = new VBox();
         Label labelTitre = new Label("Liste des classes");
         labelTitre.setFont(new Font("Arial", 24));
-        ListView listViewClasse = new ListView();
 
         ObservableList<Classe> classes = FXCollections.observableArrayList(CESI.classe);
 
@@ -235,6 +234,41 @@ public class App extends Application {
 
         layoutPageGestionClasse.getChildren().addAll(labelTitre, listClasse, addClasse, deleteClasse);
 
+//        addClasse.setOnAction(new EventHandler<ActionEvent>() {
+//            public void handle(ActionEvent e)
+//            {
+//                //HBox barre_navigation = getNavigationBar();
+//                //MenuItem mItem = (MenuItem) e.getSource();
+//                String side = addClasse.getText();
+//                switch(side)
+//                {
+//                    case "Ajouter une Classe" :
+//
+//                        GridPane page_ajout_classe = new GridPane();
+//                        page_ajout_classe.setPadding(new Insets(50, 0, 0, 200));
+//                        page_ajout_classe.setVgap(8);
+//                        page_ajout_classe.setAlignment(Pos.CENTER);
+//
+//                        Label labelNomClasse = new Label("Le nom de la classe : ");
+//
+//                        Button buttonRegister = new Button("Enregistrer");
+//                        page_ajout_classe.add(labelNomClasse, 0, 0);
+//                        page_ajout_classe.add(buttonRegister, 0, 4);
+//
+//                        var page_add_classe = new Scene(page_ajout_classe, width, height);
+//                        stageGlobal.setScene(page_add_classe);
+//                        stageGlobal.setTitle("Ajouter une classe");
+//                        stageGlobal.show();
+//                        break;
+//                    case "Modifier une Classe":
+//
+//                        break;
+//                    case "Supprimer une Classe" :
+//
+//                        break;
+//                }
+//            }
+//        }
         return layoutPageGestionClasse;
     }
 
@@ -301,6 +335,11 @@ public class App extends Application {
         Label labelMail = new Label("Votre Mail : " + utilisateur.getMail());
         Label labelGroupe = new Label("Votre Groupe : " + utilisateur.groupe.getLabel());
         Label labelClasse = new Label("Votre Classe : " + classe.getNom());
+
+        ObservableList<PresenceUtilisateur> presenceUtilisateurs = FXCollections.observableArrayList(utilisateur.getUndeclaredPresences());
+
+        ListView<PresenceUtilisateur> presenceUser = new ListView<PresenceUtilisateur>(presenceUtilisateurs);
+
         Button buttonPresence = new Button("Déclarer sa présence");
         page_profil.add(labelTest, 0, 0);
         page_profil.add(labelNom, 0, 4);
@@ -309,6 +348,7 @@ public class App extends Application {
         page_profil.add(labelGroupe, 0, 10);
         page_profil.add(labelClasse, 0, 12);
         page_profil.add(buttonPresence, 0, 16);
+        page_profil.add(presenceUser, 0, 20);
         return page_profil;
     }
 
