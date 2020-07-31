@@ -16,7 +16,13 @@ public class Utilisateur extends DB {
     public Ecole ecole;
 
     public static void main(String[] args) {
-        long[] table = Utilisateur.compareTwoTimeStamps(new Timestamp(System.currentTimeMillis()), new Timestamp(1));
+        long[] table = Utilisateur.compareTwoTimeStamps(new Timestamp(System.currentTimeMillis()), new Timestamp(1596205591));
+
+        System.out.println("Current : " + new Timestamp(System.currentTimeMillis()));
+        System.out.println("after : " + Timestamp.valueOf("1596205591"));
+        for (long item : table) {
+            System.out.println(item);
+        }
     }
 
 
@@ -58,7 +64,7 @@ public class Utilisateur extends DB {
         }
     }
 
-    public static long[]  compareTwoTimeStamps(java.sql.Timestamp currentTime, java.sql.Timestamp oldTime)
+    public static long[]  compareTwoTimeStamps(Timestamp currentTime, Timestamp oldTime)
     {
         long milliseconds1 = oldTime.getTime();
         long milliseconds2 = currentTime.getTime();
@@ -85,7 +91,14 @@ public class Utilisateur extends DB {
                 Timestamp debut = presence.getDateDebut();
                 Timestamp fin = presence.getDateFin();
 
-
+                if (current.after(fin)) {
+                    String status = "Absent";
+                } else if (current.after(debut) && current.before(fin))
+                {
+                    String status = "Retard";
+                } else {
+                    String status = "Présent";
+                }
             }
         }
 
@@ -104,8 +117,9 @@ public class Utilisateur extends DB {
         Connection db = this.getConn();
         PresenceUtilisateur presence = null;
         try {
-            Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE ID = " + this.id + " Status = 'En attente' LIMIT 1");
+            PreparedStatement ps = db.prepareStatement("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE ID = ? AND Status = 'En attente' LIMIT 1");
+            ps.setInt(1, this.id);
+            ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 presence = new PresenceUtilisateur(rs.getInt("ID_Presences"), rs.getInt("ID"));
             }
@@ -119,8 +133,9 @@ public class Utilisateur extends DB {
         Connection db = this.getConn();
         ArrayList<PresenceUtilisateur> presences = new ArrayList<PresenceUtilisateur>();
         try {
-            Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE ID = " + this.id + " Status = 'En attente'");
+            PreparedStatement ps = db.prepareStatement("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE ID = ? AND Status = 'En attente'");
+            ps.setInt(1, this.id);
+            ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 presences.add(new PresenceUtilisateur(rs.getInt("ID_Presences"), rs.getInt("ID")));
             }
