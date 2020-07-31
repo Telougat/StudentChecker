@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -32,7 +33,8 @@ public class App extends Application {
 
         /******************************************** Début page profil  *********************************************/
 
-        HBox barre_navigation = getNavigationBar();
+        //HBox barre_navigation = getNavigationBar();
+        GridPane barre_navigation = getPageProfil();
 
         VBox layout_general = new VBox();
 
@@ -116,15 +118,57 @@ public class App extends Application {
     {
         HBox layout_barre_navigation = new HBox();
         MenuBar menuBar = new MenuBar();
+        Menu eleveMenu = new Menu("Gestion des élèves");
+        Menu classeMenu = new Menu("Gestion des classes");
+
+        MenuItem newEleve = new MenuItem("Ajouter un élève");
+        MenuItem modifEleve = new MenuItem("Modifier un élève");
+        MenuItem deleteEleve = new MenuItem("Supprimer un élève");
+        MenuItem newClasse = new MenuItem("Ajouter une classe");
+        MenuItem modifClasse = new MenuItem("Modifier une classe");
+        MenuItem deleteClasse = new MenuItem("Supprimer une classe");
+
+        eleveMenu.getItems().addAll(newEleve, modifEleve, deleteEleve);
+        classeMenu.getItems().addAll(newClasse, modifClasse, deleteClasse);
+        menuBar.getMenus().addAll(eleveMenu, classeMenu);
         EventHandler<ActionEvent> action = changeTab();
         Label labelTest = new Label("Coucou");
 
-        layout_barre_navigation.getChildren().add(labelTest);
-
-
-
+        layout_barre_navigation.getChildren().add(menuBar);
 
         return layout_barre_navigation;
+    }
+
+    public GridPane getPageProfil()
+    {
+        GridPane page_profil = new GridPane();
+        page_profil.setPadding(new Insets(400));
+        page_profil.setVgap(8);
+        page_profil.setAlignment(Pos.CENTER);
+
+
+
+        EventHandler<ActionEvent> action = changeTab();
+
+        Label labelTest = new Label("Bonjour Michel");
+        Label labelNom = new Label("Votre Nom :");
+        Label labelPrenom = new Label("Votre Prenom :");
+        Label labelMail = new Label("Votre Mail :");
+        Label labelGroupe = new Label("Votre Groupe :");
+        Label labelClasse = new Label("Votre Classe :");
+        Button buttonPresence = new Button("Déclarer sa présence");
+
+        page_profil.add(labelTest, 0, 0);
+        page_profil.add(labelNom, 0, 4);
+        page_profil.add(labelPrenom, 0, 6);
+        page_profil.add(labelMail, 0, 8);
+        page_profil.add(labelGroupe, 0, 10);
+        page_profil.add(labelClasse, 0, 12);
+        page_profil.add(buttonPresence, 0, 16);
+
+        //page_profil.getChildren().addAll(labelTest, labelNom, labelPrenom, labelMail, labelGroupe, labelClasse, buttonPresence);
+
+        return page_profil;
     }
 
     public EventHandler<ActionEvent> changeTab() {
