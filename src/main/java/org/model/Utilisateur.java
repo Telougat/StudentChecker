@@ -15,6 +15,11 @@ public class Utilisateur extends DB {
     public Classe classe;
     public Ecole ecole;
 
+    public static void main(String[] args) {
+        long[] table = Utilisateur.compareTwoTimeStamps(new Timestamp(System.currentTimeMillis()), new Timestamp(1));
+    }
+
+
     // CONSTRUCTEUR
     public Utilisateur(int id, String nom, String prenom, String mail, Classe classe, int gId, String gLabel, Ecole ecole) {
         this.id = id;
@@ -61,10 +66,10 @@ public class Utilisateur extends DB {
         long diff = milliseconds2 - milliseconds1;
         long[] table = new long[4];
 
-        table[0] = diff / 1000;
-        table[1] = diff / (60 * 1000);
-        table[2] = diff / (60 * 60 * 1000);
-        table[3] = diff / (24 * 60 * 60 * 1000);
+        table[0] = diff / 1000; //Seconds
+        table[1] = diff / (60 * 1000); //Minutes
+        table[2] = diff / (60 * 60 * 1000); //Hours
+        table[3] = diff / (24 * 60 * 60 * 1000); //Days
 
         return table;
     }
@@ -95,6 +100,21 @@ public class Utilisateur extends DB {
         return true;
     }
 
+    public PresenceUtilisateur getUndeclaredPresence() {
+        Connection db = this.getConn();
+        PresenceUtilisateur presence = null;
+        try {
+            Statement st = db.createStatement();
+            ResultSet rs = st.executeQuery("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE ID = " + this.id + " Status = 'En attente' LIMIT 1");
+            if (rs.next()) {
+                presence = new PresenceUtilisateur(rs.getInt("ID_Presences"), rs.getInt("ID"));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return presence;
+    }
+
     public ArrayList<PresenceUtilisateur> getUndeclaredPresences() {
         Connection db = this.getConn();
         ArrayList<PresenceUtilisateur> presences = new ArrayList<PresenceUtilisateur>();
@@ -108,17 +128,6 @@ public class Utilisateur extends DB {
             ex.printStackTrace();
         }
         return presences;
-    }
-
-    public static void main(String[] args) {
-        Utilisateur test = new Utilisateur(3);
-        ArrayList<PresenceUtilisateur> presences = test.getUndeclaredPresences();
-        System.out.println("Avant boucle");
-        for (PresenceUtilisateur presence : presences) {
-            System.out.println("Status= " + presence.getStatus());
-            System.out.println("Heure de présence = " + presence.getPresent());
-        }
-        System.out.print("Apres boucle");
     }
 
     // GETTER ET SETTER
