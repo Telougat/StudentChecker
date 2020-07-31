@@ -86,7 +86,7 @@ public class Classe extends DB {
         super();
         Connection db = this.getConn();
         try {
-            PreparedStatement ps = db.prepareStatement("SELECT ID, Nom, ID_Ecoles FROM Classes AS c INNER JOIN Composition_classes AS cc ON cc.ID = c.ID WHERE cc.ID_Utilisateurs = ?");
+            PreparedStatement ps = db.prepareStatement("SELECT c.ID, c.Nom, c.ID_Ecoles FROM Classes AS c INNER JOIN Composition_classes AS cc ON cc.ID = c.ID WHERE cc.ID_Utilisateurs = ?");
             ps.setInt(1, utilisateur.getId());
             ResultSet rs = ps.executeQuery();
             rs.next();
@@ -103,7 +103,7 @@ public class Classe extends DB {
     public boolean addPresence(Timestamp debut, Timestamp fin) {
         Connection db = this.getConn();
         try {
-            PreparedStatement ps = db.prepareStatement("INSERT INTO Presences(Debut, Fin) VALUES (? , ?)");
+            PreparedStatement ps = db.prepareStatement("INSERT INTO Presences(Debut, Fin) VALUES (? , ?)", Statement.RETURN_GENERATED_KEYS);
             ps.setTimestamp(1, debut);
             ps.setTimestamp(2, fin);
             ps.executeUpdate();
@@ -111,7 +111,6 @@ public class Classe extends DB {
             ResultSet rs = ps.getGeneratedKeys();
             rs.next();
             int id = rs.getInt(1);
-            System.out.println(id);
 
             PreparedStatement linkClasse = db.prepareStatement("INSERT INTO Presence_classe(ID, ID_Classes) VALUES (?, ?)");
             linkClasse.setInt(1, id);
