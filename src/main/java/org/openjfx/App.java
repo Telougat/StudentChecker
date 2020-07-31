@@ -394,6 +394,30 @@ public class App extends Application {
             layout_champs_insert.setVisible(true);
         });
 
+        bouton_supprimer_eleve.setOnAction(e -> {
+            if(cbbClasses.getValue() != null)
+            {
+                if(affichageListeEleve.getSelectionModel().getSelectedItem() != null)
+                {
+
+                }
+                else {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Information");
+                    alert.setHeaderText("Choisissez un élève à supprimer");
+
+                    alert.showAndWait();
+                }
+            }
+            else {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Information");
+                alert.setHeaderText("Choisissez une classe");
+
+                alert.showAndWait();
+            }
+        });
+
         corpsPage.getChildren().add(conteneur_elements);
         corpsPage.getChildren().add(layout_boutons);
         corpsPage.getChildren().add(layout_champs_insert);
