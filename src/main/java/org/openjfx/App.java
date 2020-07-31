@@ -1,6 +1,8 @@
 package org.openjfx;
 
 import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -217,10 +219,29 @@ public class App extends Application {
     {
         VBox layoutPageGestionClasse = new VBox();
 
-        Label labelTitre = new Label("Gestion des classes");
+        Label labelTitre = new Label("Liste des classes");
         labelTitre.setFont(new Font("Arial", 24));
 
-        layoutPageGestionClasse.getChildren().add(labelTitre);
+        String classe1 = new String("classe1");
+        String classe2 = new String("classe2");
+        String classe3 = new String("classe3");
+        Button addClasse = new Button("Ajouter une Classe");
+        Button modifClasse = new Button("Modifier une Classe");
+        Button deleteClasse = new Button("Supprimer une Classe");
+
+        ObservableList<String> classes = FXCollections.observableArrayList(classe1, classe2, classe3);
+
+        ListView<String> ClasseView = new ListView<String>(classes);
+
+        //ClasseView.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+
+        //ClasseView.getSelectionModel().selectIndices(1, 2);
+
+        //ClasseView.getFocusModel().focus(1);
+
+
+
+        layoutPageGestionClasse.getChildren().addAll(labelTitre, ClasseView, addClasse, modifClasse, deleteClasse);
 
         return layoutPageGestionClasse;
     }
@@ -233,8 +254,6 @@ public class App extends Application {
         labelTitre.setFont(new Font("Arial", 24));
 
         HBox corpsPage = new HBox();
-        
-
 
         layoutPageGestionEleves.setPadding(new Insets(15));
         layoutPageGestionEleves.getChildren().add(labelTitre);
@@ -246,7 +265,6 @@ public class App extends Application {
         GridPane page_profil = new GridPane();
         page_profil.setPadding(new Insets(50, 0, 0, 200));
         page_profil.setVgap(8);
-        //page_profil.setAlignment(Pos.CENTER);
         Utilisateur utilisateur = new Utilisateur(idUtilisateur);
 
         Classe classe = new Classe(utilisateur);
