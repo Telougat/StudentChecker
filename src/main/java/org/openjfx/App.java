@@ -1,6 +1,7 @@
 package org.openjfx;
 
 import javafx.application.Application;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -17,6 +18,8 @@ import javafx.scene.text.Font;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import org.model.*;
+
+import java.sql.Timestamp;
 
 /**
  * JavaFX App
@@ -126,9 +129,6 @@ public class App extends Application {
 
         /******************************************** Fin page connexion *********************************************/
 
-
-
-
         stage.setScene(page_login);
         stage.show();
     }
@@ -203,7 +203,6 @@ public class App extends Application {
 
         menuBar.getMenus().add(menu);
 
-
         menuBar.getMenus().addAll(menu01, menu02);
         menuBar.setMinWidth(300); // do not shrink
         menuBar.setPrefWidth(width);
@@ -211,21 +210,16 @@ public class App extends Application {
         HBox layout_barre_navigation = new HBox();
         layout_barre_navigation.getChildren().add(menuBar);
 
-
         return layout_barre_navigation;
     }
 
     public VBox getPageGestionClasse()
     {
-        double width = stageGlobal.getWidth();
-        double height = stageGlobal.getHeight();
-
         VBox layoutPageGestionClasse = new VBox();
         Label labelTitre = new Label("Liste des classes");
         labelTitre.setFont(new Font("Arial", 24));
 
         ObservableList<Classe> classes = FXCollections.observableArrayList(CESI.classe);
-
 
         ListView<Classe> listClasse = new ListView<Classe>(classes);
         Button addClasse = new Button("Ajouter une Classe");
@@ -289,8 +283,6 @@ public class App extends Application {
             cbbClasses.getItems().add(classe.getNom());
         }
 
-        
-
         cbbClasses.setPromptText("Choisissez une classe");
         cbbClasses.setVisibleRowCount(5); // Max 5 éléments visibles
 
@@ -322,9 +314,14 @@ public class App extends Application {
 
     public GridPane getPageProfil() {
         GridPane page_profil = new GridPane();
-        page_profil.setPadding(new Insets(50, 0, 0, 200));
-        page_profil.setVgap(8);
-        //page_profil.setAlignment(Pos.CENTER);
+        VBox vbox1 = new VBox();
+        VBox vbox2 = new VBox();
+        HBox hbox = new HBox();
+        vbox1.setSpacing(20);
+        vbox2.setSpacing(20);
+        vbox1.setPadding(new Insets(50));
+        vbox2.setPadding(new Insets(50, 0, 50, 50));
+
         Utilisateur utilisateur = new Utilisateur(idUtilisateur);
 
         Classe classe = new Classe(utilisateur);
@@ -341,14 +338,20 @@ public class App extends Application {
         ListView<PresenceUtilisateur> presenceUser = new ListView<PresenceUtilisateur>(presenceUtilisateurs);
 
         Button buttonPresence = new Button("Déclarer sa présence");
-        page_profil.add(labelTest, 0, 0);
-        page_profil.add(labelNom, 0, 4);
-        page_profil.add(labelPrenom, 0, 6);
-        page_profil.add(labelMail, 0, 8);
-        page_profil.add(labelGroupe, 0, 10);
-        page_profil.add(labelClasse, 0, 12);
-        page_profil.add(buttonPresence, 0, 16);
-        page_profil.add(presenceUser, 0, 20);
+
+        vbox1.getChildren().add(labelTest);
+        vbox1.getChildren().add(labelNom);
+        vbox1.getChildren().add(labelPrenom);
+        vbox1.getChildren().add(labelMail);
+        vbox1.getChildren().add(labelGroupe);
+        vbox1.getChildren().add(labelClasse);
+
+        vbox2.getChildren().add(presenceUser);
+        vbox2.getChildren().add(buttonPresence);
+        hbox.getChildren().addAll(vbox1, vbox2);
+
+        page_profil.getChildren().add(hbox);
+
         return page_profil;
     }
 

@@ -17,7 +17,7 @@ public class Classe extends DB {
     public ArrayList<Utilisateur> eleves;
 
     // CONSTRUCTEUR
-    public Classe(int id, String nom, Presence presence, Ecole ecole) {
+    public Classe(int id, String nom, Ecole ecole) {
         this.id = id;
         this.nom = nom;
         this.ecole = ecole;
