@@ -12,6 +12,12 @@ public class Groupe extends DB {
     private String label;
 
     // CONSTRUCTEUR
+
+    public Groupe(int id, String label) {
+        this.id = id;
+        this.label = label;
+    }
+
     public Groupe(int id) {
         super();
         Connection db = this.getConn();

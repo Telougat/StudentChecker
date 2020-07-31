@@ -12,9 +12,19 @@ public class Utilisateur extends DB {
     private String mail;
 
     public Groupe groupe;
+    public Classe classe;
     public Ecole ecole;
 
     // CONSTRUCTEUR
+    public Utilisateur(int id, String nom, String prenom, String mail, Classe classe, int gId, String gLabel, Ecole ecole) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.mail = mail;
+        this.classe = classe;
+        this.groupe = new Groupe(gId, gLabel);
+    }
+
     public Utilisateur(Integer id) {
         super();
         Connection db = this.getConn();
@@ -39,7 +49,7 @@ public class Utilisateur extends DB {
         ArrayList<PresenceUtilisateur> presences = new ArrayList<PresenceUtilisateur>();
         try {
             Statement st = db.createStatement();
-            ResultSet rs = st.executeQuery("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE Status = `En attente`");
+            ResultSet rs = st.executeQuery("SELECT ID, ID_Presences FROM Presence_utilisateur WHERE Status = 'En attente'");
 
             while (rs.next()) {
                 presences.add(new PresenceUtilisateur(rs.getInt("ID_Presences"), rs.getInt("ID")));
@@ -48,6 +58,17 @@ public class Utilisateur extends DB {
             ex.printStackTrace();
         }
         return presences;
+    }
+
+    public static void main(String[] args) {
+        Utilisateur test = new Utilisateur(3);
+        ArrayList<PresenceUtilisateur> presences = test.getUndeclaredPresences();
+        System.out.println("Avant boucle");
+        for (PresenceUtilisateur presence : presences) {
+            System.out.println("Status= " + presence.getStatus());
+            System.out.println("Heure de présence = " + presence.getPresent());
+        }
+        System.out.print("Apres boucle");
     }
 
     // GETTER ET SETTER

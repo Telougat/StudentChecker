@@ -15,53 +15,14 @@ public class Classe extends DB {
     public Ecole ecole;
     public ArrayList<Utilisateur> eleves;
 
-    public static void main(String[] args) {
-        Classe classe = new Classe(1);
-        System.out.println("Ecole : " + classe.ecole.getNom());
-        System.out.println("Classe : " + classe.getNom());
-
-        Iterator<Utilisateur> iter = classe.eleves.iterator();
-        System.out.println("### Eleves ###");
-        while (iter.hasNext()) {
-            Utilisateur util = iter.next();
-            System.out.println();
-            System.out.println("Nom : " + util.getNom());
-            System.out.println("Prenom : " + util.getPrenom());
-            System.out.println("Mail : " + util.getMail());
-            System.out.println();
-        }
-
-        classe.addPresence(new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()));
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getNom() {
-        return nom;
-    }
-
-    public Ecole getEcole() {
-        return ecole;
-    }
-
-    private void initUtilisateursList() {
-        Connection db = this.getConn();
-        try {
-            PreparedStatement utilisateurs = db.prepareStatement("SELECT ID_Utilisateurs FROM Composition_classes WHERE ID = ?");
-            utilisateurs.setInt(1, this.id);
-            ResultSet utilisateur = utilisateurs.executeQuery();
-            this.eleves = new ArrayList<Utilisateur>();
-            while(utilisateur.next()) {
-                this.eleves.add(new Utilisateur(utilisateur.getInt("ID_Utilisateurs")));
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-    }
-
     // CONSTRUCTEUR
+    public Classe(int id, String nom, Ecole ecole) {
+        this.id = id;
+        this.nom = nom;
+        this.ecole = ecole;
+        this.generateUtilisateursList();
+    }
+
     public Classe(Integer id) {
         super();
         Connection db = this.getConn();
@@ -74,7 +35,7 @@ public class Classe extends DB {
             this.nom = rs.getString("Nom");
             this.ecole = new Ecole(rs.getInt("ID_Ecoles"));
 
-            this.initUtilisateursList();
+            this.generateUtilisateursList();
 
             db.close();
         } catch (SQLException ex) {
@@ -94,7 +55,33 @@ public class Classe extends DB {
             this.nom = rs.getString("Nom");
             this.ecole = new Ecole(rs.getInt("ID_Ecoles"));
 
-            this.initUtilisateursList();
+            this.generateUtilisateursList();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void generateUtilisateursList() {
+        Connection db = this.getConn();
+        try {
+            PreparedStatement ps = db.prepareStatement("SELECT u.ID as uId, u.Nom as uNom, u.Prenom as uPrenom, u.Mail as uMail, g.ID as gId, g.Label as gLabel FROM Utilisateurs as u " +
+                    "INNER JOIN Composition_classes as cc ON cc.ID_Utilisateurs = u.ID AND cc.ID = ? " +
+                    "INNER JOIN Groupe as g ON g.ID = u.ID_Groupe " +
+                    "GROUP BY u.ID");
+            ps.setInt(1, this.id);
+            ResultSet rs = ps.executeQuery();
+            this.eleves = new ArrayList<Utilisateur>();
+            while (rs.next()) {
+                int uId = rs.getInt("uId");
+                String nom = rs.getString("uNom");
+                String prenom = rs.getString("uPrenom");
+                String mail = rs.getString("uMail");
+                int gId = rs.getInt("gId");
+                String gLabel = rs.getString("gLabel");
+                Utilisateur user = new Utilisateur(uId, nom, prenom, mail, this, gId, gLabel, this.ecole);
+                this.eleves.add(user);
+            }
+
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
@@ -137,5 +124,13 @@ public class Classe extends DB {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNom() {
+        return nom;
     }
 }
