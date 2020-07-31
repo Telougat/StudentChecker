@@ -22,7 +22,11 @@ import javafx.stage.Stage;
 import org.model.*;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -236,10 +240,63 @@ public class App extends Application {
         Button addClasse = new Button("Ajouter une Classe");
         //Button modifClasse = new Button("Modifier une Classe");
         Button deleteClasse = new Button("Supprimer une Classe");
+        Button boutonPresence = new Button("Ajouter présence");
 
-        vboxBouton.getChildren().addAll(addClasse, deleteClasse);
+        vboxBouton.getChildren().addAll(addClasse, deleteClasse, boutonPresence);
 
-        layoutPageGestionClasse.getChildren().addAll(labelTitre, listClasse, vboxBouton);
+        VBox insert_presence_classe = new VBox();
+        HBox hbox = new HBox();
+        Label labelDateDebut = new Label("Date de debut : ");
+        Label labelDateFin = new Label("Date de fin : ");
+        DatePicker formDateDebut = new DatePicker();
+        DatePicker formDateFin = new DatePicker();
+
+        int result = listClasse.getSelectionModel().getSelectedIndex();
+        insert_presence_classe.getChildren().addAll(labelDateDebut, labelDateFin, formDateDebut, formDateFin);
+        hbox.getChildren().addAll(vboxBouton, insert_presence_classe);
+
+        listClasse.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        listClasse.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Classe>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Classe> observable, Classe oldValue, Classe newValue) {
+                //label.setText("OLD: " + oldValue + ",  NEW: " + newValue);
+                System.out.println("ancienne valeur " + oldValue);
+                System.out.println("nouvelle valeur " + newValue);
+            }
+        });
+
+
+
+        layoutPageGestionClasse.getChildren().addAll(labelTitre, listClasse, hbox);
+
+
+
+        listClasse.getSelectionModel().getSelectedItem();
+        //System.out.println(result);
+        //System.out.println(listClasse.getSelectionModel().getSelectedItem());
+        //System.out.println(listClasse.getItems().get(1));
+        //System.out.println(listClasse.getItems().toString());
+        insert_presence_classe.setVisible(false);
+        boutonPresence.setOnAction(e -> {
+            insert_presence_classe.setVisible(true);
+            if (formDateDebut.getValue() != null) {
+                if (formDateFin.getValue() != null) {
+                    if(formDateDebut.getValue().isBefore(formDateFin.getValue()))
+                    {
+                        LocalDate dateDebut = formDateDebut.getValue();
+                        LocalDate dateFin = formDateFin.getValue();
+
+                        LocalDateTime newDateDebut = new LocalDateTime();
+                        DateTimeFormatter dateFormat = DateTimeFormatter.forPattern("yyyy-MM-dd HH:mm:ss");
+                        Timestamp ts = Timestamp.valueOf(newDateDebut.toString(dateFormat));
+                        //Presence presence = new Presence(1, dateDebut, dateFin);
+
+
+                    }
+                }
+            }
+        });
 
 //        addClasse.setOnAction(new EventHandler<ActionEvent>() {
 //            public void handle(ActionEvent e)

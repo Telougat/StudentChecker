@@ -27,6 +27,11 @@
             <artifactId>spring-jdbc</artifactId>
             <version>5.2.7.RELEASE</version>
         </dependency>
+        <dependency>
+            <groupId>no.tornado</groupId>
+            <artifactId>tornadofx-controls</artifactId>
+            <version>1.0.3</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
