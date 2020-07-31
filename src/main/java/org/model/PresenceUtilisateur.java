@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class PresenceUtilisateur extends DB {
     private String status;
-    private Date present;
+    private Timestamp present;
 
     public Presence presence;
     public Utilisateur utilisateur;
@@ -19,7 +19,7 @@ public class PresenceUtilisateur extends DB {
             ResultSet rs = presenceUtilisateur.executeQuery();
             rs.next();
             this.status = rs.getString("Status");
-            this.present = rs.getDate("Date");
+            this.present = rs.getTimestamp("Date");
             this.presence = new Presence(rs.getInt("ID_Presences"));
             this.utilisateur = new Utilisateur(rs.getInt("ID"));
         } catch (SQLException ex) {
@@ -49,7 +49,7 @@ public class PresenceUtilisateur extends DB {
         return status;
     }
 
-    public Date getPresent() {
+    public Timestamp getPresent() {
         return present;
     }
 }
