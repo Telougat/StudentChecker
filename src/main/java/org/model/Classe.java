@@ -22,6 +22,7 @@ public class Classe extends DB {
         this.nom = nom;
         this.ecole = ecole;
         this.generateUtilisateursList();
+        this.generatePresencesList();
     }
 
     public Classe(Integer id) {
@@ -108,6 +109,28 @@ public class Classe extends DB {
                 String gLabel = rs.getString("gLabel");
                 Utilisateur user = new Utilisateur(uId, nom, prenom, mail, this, gId, gLabel, this.ecole);
                 this.eleves.add(user);
+            }
+
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void generatePresencesList() {
+        Connection db = this.getConn();
+        try {
+            PreparedStatement ps = db.prepareStatement("SELECT p.ID as pId, p.Debut as pDebut, p.Fin as pFin FROM Presences as p " +
+                    "INNER JOIN Presence_classe as pc ON pc.ID = p.ID AND pc.ID_Classes = ? " +
+                    "GROUP BY p.ID");
+            ps.setInt(1, this.id);
+            ResultSet rs = ps.executeQuery();
+            this.presences = new ArrayList<Presence>();
+            while (rs.next()) {
+                int id = rs.getInt("pId");
+                Timestamp debut = rs.getTimestamp("pDebut");
+                Timestamp fin = rs.getTimestamp("pFin");
+                Presence presence = new Presence(id, debut, fin);
+                this.presences.add(presence);
             }
 
         } catch (SQLException ex) {
