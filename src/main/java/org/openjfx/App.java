@@ -319,8 +319,7 @@ public class App extends Application {
 
         ComboBox cbbClassesDispo = new ComboBox();
         for (Classe classe: CESI.classe) {
-            cbbClassesDispo.getItems().add(classe.getNom());
-            cbbClassesDispo.setValue(classe.getId());
+            cbbClassesDispo.getItems().set(classe.getId(),cbbClassesDispo.getItems().add(classe.getNom()));
         }
         cbbClassesDispo.setPromptText("Classe");
         layout_champs_insert.getChildren().add(cbbClassesDispo);
@@ -361,8 +360,17 @@ public class App extends Application {
                                         String classe_eleve = cbbClassesDispo.getValue().toString();
                                         String role_eleve = cbbRoles.getValue().toString();
 
-                                        CRUDUtilisateur crud_utilisateur = new CRUDUtilisateur();
-                                        //crud_utilisateur.createUtilisateur(nom_eleve,prenom_eleve,mail_eleve,password_eleve,role_eleve,CESI);
+                                        //CRUDUtilisateur crud_utilisateur = new CRUDUtilisateur();
+                                        //Utilisateur nouvelUtilisateur = crud_utilisateur.createUtilisateur(nom_eleve,prenom_eleve,mail_eleve,password_eleve,role_eleve,CESI);
+                                        int id_classe = 1;
+                                        for (Classe classe: CESI.classe) {
+                                            if(classe.getNom().equals(classe_eleve))
+                                            {
+                                                id_classe = classe.getId();
+                                            }
+                                        }
+                                        //crud_utilisateur.linkToClasse(nouvelUtilisateur,id_classe);
+                                        System.out.println("id classe : "+id_classe);
                                         System.out.println(cbbClassesDispo.getValue().hashCode());
                                         layout_champs_insert.setVisible(false);
                                     } else {
