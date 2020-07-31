@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -21,6 +22,8 @@ import org.model.Login;
 public class App extends Application {
 
     Stage stageGlobal;
+    int idUtilisateur;
+
     @Override
     public void start(Stage stage) {
         stageGlobal = stage;
@@ -34,13 +37,13 @@ public class App extends Application {
 
         /******************************************** Début page profil  *********************************************/
 
-        HBox barre_navigation = getNavigationBar();
+        //HBox barre_navigation = getNavigationBar();
 
-        VBox layout_general = new VBox();
+        //VBox layout_general = new VBox();
 
-        layout_general.getChildren().add(barre_navigation);
+        //layout_general.getChildren().add(barre_navigation);
 
-        var page_profil = new Scene(layout_general, stage.getWidth(), stage.getHeight());
+        //var page_profil = new Scene(layout_general, stage.getWidth(), stage.getHeight());
 
 
         /******************************************** Fin  page profil  *********************************************/
@@ -69,13 +72,35 @@ public class App extends Application {
                     if(input_password.getText().length() > 0)
                     {
                         Login login = new Login();
-                        int idUtilisateur = login.check(input_nom_utilisateur.getText(), input_password.getText());
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Info connexion");
-                        alert.setHeaderText("L'id utilisateur est " + idUtilisateur);
+                        idUtilisateur = login.check(input_nom_utilisateur.getText(), input_password.getText());
 
-                        alert.showAndWait();
-                        stage.setScene(page_profil);
+                        if(idUtilisateur != -1)
+                        {
+                            VBox layout_page_profil_general = new VBox();
+                            GridPane profil = getPageProfil();
+                            if(true) // check role admin
+                            {
+                                HBox barre_navigation = getNavigationBar();
+
+                                layout_page_profil_general.getChildren().add(barre_navigation);
+                                layout_page_profil_general.getChildren().add(profil);
+                            }
+                            else {
+                                layout_page_profil_general.getChildren().add(profil);
+                            }
+                            var page_profil = new Scene(layout_page_profil_general, bounds.getWidth(), bounds.getHeight());
+                            stageGlobal.setScene(page_profil);
+                            stageGlobal.setTitle("Page de profil");
+
+                        }
+                        else {
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Information");
+                            alert.setHeaderText("Erreur de connexion");
+                            alert.setContentText("Email ou mot de passe incorrect");
+
+                            alert.showAndWait();
+                        }
                     }
                     else {
                         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -142,7 +167,14 @@ public class App extends Application {
                 switch(side)
                 {
                     case "Page de profil" :
-                        System.out.println("page de profil !!!");
+                        VBox layout_page_profil_general = new VBox();
+                        GridPane profil = getPageProfil();
+
+                        layout_page_profil_general.getChildren().add(barre_navigation);
+                        layout_page_profil_general.getChildren().add(profil);
+
+                        var page_profil = new Scene(layout_page_profil_general, bounds.getWidth(), bounds.getHeight());
+                        stageGlobal.setScene(page_profil);
                         stageGlobal.setTitle("Page de profil");
                         break;
                     case "Gestion des classes":
@@ -216,6 +248,29 @@ public class App extends Application {
         layoutPageGestionEleves.getChildren().add(labelTitre);
 
         return layoutPageGestionEleves;
+    }
+
+    public GridPane getPageProfil() {
+        GridPane page_profil = new GridPane();
+        page_profil.setPadding(new Insets(400.0D));
+        page_profil.setVgap(8.0D);
+        page_profil.setAlignment(Pos.CENTER);
+        EventHandler<ActionEvent> action = this.changeTab();
+        Label labelTest = new Label("Bonjour Michel");
+        Label labelNom = new Label("Votre Nom :");
+        Label labelPrenom = new Label("Votre Prenom :");
+        Label labelMail = new Label("Votre Mail :");
+        Label labelGroupe = new Label("Votre Groupe :");
+        Label labelClasse = new Label("Votre Classe :");
+        Button buttonPresence = new Button("Déclarer sa présence");
+        page_profil.add(labelTest, 0, 0);
+        page_profil.add(labelNom, 0, 4);
+        page_profil.add(labelPrenom, 0, 6);
+        page_profil.add(labelMail, 0, 8);
+        page_profil.add(labelGroupe, 0, 10);
+        page_profil.add(labelClasse, 0, 12);
+        page_profil.add(buttonPresence, 0, 16);
+        return page_profil;
     }
 
     public EventHandler<ActionEvent> changeTab() {
