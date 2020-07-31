@@ -119,16 +119,16 @@ public class Classe extends DB {
     public void generatePresencesList() {
         Connection db = this.getConn();
         try {
-            PreparedStatement ps = db.prepareStatement("SELECT ID, Debut, Fin FROM Presences as p " +
+            PreparedStatement ps = db.prepareStatement("SELECT p.ID as pId, p.Debut as pDebut, p.Fin as pFin FROM Presences as p " +
                     "INNER JOIN Presence_classe as pc ON pc.ID = p.ID AND pc.ID_Classes = ? " +
                     "GROUP BY p.ID");
             ps.setInt(1, this.id);
             ResultSet rs = ps.executeQuery();
             this.presences = new ArrayList<Presence>();
             while (rs.next()) {
-                int id = rs.getInt("ID");
-                Timestamp debut = rs.getTimestamp("Debut");
-                Timestamp fin = rs.getTimestamp("Fin");
+                int id = rs.getInt("pId");
+                Timestamp debut = rs.getTimestamp("pDebut");
+                Timestamp fin = rs.getTimestamp("pFin");
                 Presence presence = new Presence(id, debut, fin);
                 this.presences.add(presence);
             }
