@@ -57,14 +57,6 @@ public class Utilisateur extends DB {
         return mail;
     }
 
-    public Groupe getGroupe() {
-        return groupe;
-    }
-
-    public Ecole getEcole() {
-        return ecole;
-    }
-
     // METHODES
     public void addUtilisateur() {
 

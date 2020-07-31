@@ -1,11 +1,9 @@
 package org.model;
 
 import javax.xml.transform.Result;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 
 public class Classe extends DB {
@@ -32,6 +30,8 @@ public class Classe extends DB {
             System.out.println("Mail : " + util.getMail());
             System.out.println();
         }
+
+        classe.addPresence(new Timestamp(new Date().getTime()), new Timestamp(new Date().getTime()));
     }
 
     public int getId() {
@@ -44,6 +44,21 @@ public class Classe extends DB {
 
     public Ecole getEcole() {
         return ecole;
+    }
+
+    private void initUtilisateursList() {
+        Connection db = this.getConn();
+        try {
+            PreparedStatement utilisateurs = db.prepareStatement("SELECT ID_Utilisateurs FROM Composition_classes WHERE ID = ?");
+            utilisateurs.setInt(1, this.id);
+            ResultSet utilisateur = utilisateurs.executeQuery();
+            this.eleves = new ArrayList<Utilisateur>();
+            while(utilisateur.next()) {
+                this.eleves.add(new Utilisateur(utilisateur.getInt("ID_Utilisateurs")));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     // CONSTRUCTEUR
@@ -59,16 +74,51 @@ public class Classe extends DB {
             this.nom = rs.getString("Nom");
             this.ecole = new Ecole(rs.getInt("ID_Ecoles"));
 
-            // Get all users of classe
-            PreparedStatement utilisateurs = db.prepareStatement("SELECT ID_Utilisateurs FROM Composition_classes WHERE ID = ?");
-            utilisateurs.setInt(1, id);
-            ResultSet utilisateur = utilisateurs.executeQuery();
-            this.eleves = new ArrayList<Utilisateur>();
-            while(utilisateur.next()) {
-                this.eleves.add(new Utilisateur(utilisateur.getInt("ID_Utilisateurs")));
-            }
+            this.initUtilisateursList();
+
             db.close();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-    }}
+    }
+
+    public Classe (Utilisateur utilisateur) {
+        super();
+        Connection db = this.getConn();
+        try {
+            PreparedStatement ps = db.prepareStatement("SELECT c.ID, c.Nom, c.ID_Ecoles FROM Classes AS c INNER JOIN Composition_classes AS cc ON cc.ID = c.ID WHERE cc.ID_Utilisateurs = ?");
+            ps.setInt(1, utilisateur.getId());
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            this.id = rs.getInt("ID");
+            this.nom = rs.getString("Nom");
+            this.ecole = new Ecole(rs.getInt("ID_Ecoles"));
+
+            this.initUtilisateursList();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public boolean addPresence(Timestamp debut, Timestamp fin) {
+        Connection db = this.getConn();
+        try {
+            PreparedStatement ps = db.prepareStatement("INSERT INTO Presences(Debut, Fin) VALUES (? , ?)", Statement.RETURN_GENERATED_KEYS);
+            ps.setTimestamp(1, debut);
+            ps.setTimestamp(2, fin);
+            ps.executeUpdate();
+
+            ResultSet rs = ps.getGeneratedKeys();
+            rs.next();
+            int id = rs.getInt(1);
+
+            PreparedStatement linkClasse = db.prepareStatement("INSERT INTO Presence_classe(ID, ID_Classes) VALUES (?, ?)");
+            linkClasse.setInt(1, id);
+            linkClasse.setInt(2, this.id);
+            linkClasse.executeUpdate();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return true;
+    }
+}
