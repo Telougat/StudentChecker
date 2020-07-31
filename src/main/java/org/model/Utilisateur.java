@@ -56,12 +56,17 @@ public class Utilisateur extends DB {
 
     public boolean declarePresence(int idPresence) {
         boolean rtn = false;
+        System.out.println("Presence Start");
+        System.out.println(this.classe == null);
         if (this.classe == null) {
-            return rtn;
+            this.classe = new Classe(this);
+            this.classe.generatePresencesList();
         }
 
         for (Presence presence : this.classe.presences) {
+            System.out.println("Declare Presence");
             if (presence.getId() == idPresence) {
+                System.out.println("In conditions");
                 Timestamp current = new Timestamp(System.currentTimeMillis());
                 Timestamp debut = presence.getDateDebut();
                 Timestamp fin = presence.getDateFin();

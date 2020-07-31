@@ -90,10 +90,6 @@ public class CRUDUtilisateur extends DB {
         try {
             Connection db = this.getConn();
 
-            PreparedStatement ps = db.prepareStatement("DELETE FROM Utilisateurs WHERE ID = ?");
-            ps.setInt(1, utilisateur.getId());
-            int rows = ps.executeUpdate();
-
             PreparedStatement dPresence = db.prepareStatement("DELETE FROM Presence_utilisateur WHERE ID = ?");
             dPresence.setInt(1, utilisateur.getId());
             dPresence.executeUpdate();
@@ -101,6 +97,10 @@ public class CRUDUtilisateur extends DB {
             PreparedStatement dClasse = db.prepareStatement("DELETE FROM Composition_classes WHERE ID = ?");
             dClasse.setInt(1, utilisateur.getId());
             dClasse.executeUpdate();
+
+            PreparedStatement ps = db.prepareStatement("DELETE FROM Utilisateurs WHERE ID = ?");
+            ps.setInt(1, utilisateur.getId());
+            int rows = ps.executeUpdate();
 
             if (rows <= 0) {
                 return false;

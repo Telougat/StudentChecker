@@ -471,6 +471,8 @@ public class App extends Application {
             buttonPresence.setOnAction(e -> {
                 System.out.println("OUI OUI");
                 utilisateur.declarePresence(presenceUtilisateur.presence.getId());
+                vbox2.getChildren().remove(labelPresence);
+                vbox2.getChildren().remove(buttonPresence);
             });
             vbox2.getChildren().add(labelPresence);
             vbox2.getChildren().add(buttonPresence);
