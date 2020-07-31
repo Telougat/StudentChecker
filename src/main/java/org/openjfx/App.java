@@ -30,23 +30,10 @@ public class App extends Application {
 
         Screen screen = Screen.getPrimary();
         Rectangle2D bounds = screen.getVisualBounds();
-        stage.setX(0);
-        stage.setY(0);
-        stage.setWidth(bounds.getWidth());
-        stage.setHeight(bounds.getHeight());
-
-        /******************************************** Début page profil  *********************************************/
-
-        //HBox barre_navigation = getNavigationBar();
-
-        //VBox layout_general = new VBox();
-
-        //layout_general.getChildren().add(barre_navigation);
-
-        //var page_profil = new Scene(layout_general, stage.getWidth(), stage.getHeight());
-
-
-        /******************************************** Fin  page profil  *********************************************/
+        stage.setX(bounds.getWidth()/3);
+        stage.setY(bounds.getWidth()/6);
+        stage.setWidth(bounds.getWidth()/3);
+        stage.setHeight(bounds.getHeight()/2);
 
         /****************************************** Début page connexion *********************************************/
         GridPane layout_page_login = new GridPane();
@@ -121,11 +108,11 @@ public class App extends Application {
             }
         });
 
-        layout_page_login.add(label_nom_utilisateur,30,25);
-        layout_page_login.add(input_nom_utilisateur,31,25);
-        layout_page_login.add(label_password,30,26);
-        layout_page_login.add(input_password,31,26);
-        layout_page_login.add(bouton_connexion,31,27);
+        layout_page_login.add(label_nom_utilisateur,4,2);
+        layout_page_login.add(input_nom_utilisateur,5,2);
+        layout_page_login.add(label_password,4,3);
+        layout_page_login.add(input_password,5,3);
+        layout_page_login.add(bouton_connexion,5,4);
 
 
         var page_login = new Scene(layout_page_login, stage.getWidth(), stage.getHeight());
@@ -141,8 +128,8 @@ public class App extends Application {
 
     public HBox getNavigationBar()
     {
-        Screen screen = Screen.getPrimary();
-        Rectangle2D bounds = screen.getVisualBounds();
+        double width = stageGlobal.getWidth();
+        double height = stageGlobal.getHeight();
 
         Menu menu = new Menu();
         MenuBar menuBar = new MenuBar();
@@ -173,7 +160,7 @@ public class App extends Application {
                         layout_page_profil_general.getChildren().add(barre_navigation);
                         layout_page_profil_general.getChildren().add(profil);
 
-                        var page_profil = new Scene(layout_page_profil_general, bounds.getWidth(), bounds.getHeight());
+                        var page_profil = new Scene(layout_page_profil_general, width, height);
                         stageGlobal.setScene(page_profil);
                         stageGlobal.setTitle("Page de profil");
                         break;
@@ -184,7 +171,7 @@ public class App extends Application {
                         layout_gestion_classe_general.getChildren().add(barre_navigation);
                         layout_gestion_classe_general.getChildren().add(gestion_classe);
 
-                        var page_gestion_classe = new Scene(layout_gestion_classe_general, bounds.getWidth(), bounds.getHeight());
+                        var page_gestion_classe = new Scene(layout_gestion_classe_general, width, height);
                         stageGlobal.setScene(page_gestion_classe);
                         stageGlobal.setTitle("Gestion des classes");
                         break;
@@ -195,7 +182,7 @@ public class App extends Application {
                         layout_gestion_eleves_general.getChildren().add(barre_navigation);
                         layout_gestion_eleves_general.getChildren().add(gestion_eleves);
 
-                        var page_gestion_eleves = new Scene(layout_gestion_eleves_general, bounds.getWidth(), bounds.getHeight());
+                        var page_gestion_eleves = new Scene(layout_gestion_eleves_general, width, height);
                         stageGlobal.setScene(page_gestion_eleves);
                         stageGlobal.setTitle("Gestion des élèves");
                         break;
@@ -212,7 +199,7 @@ public class App extends Application {
 
         menuBar.getMenus().addAll(menu01, menu02);
         menuBar.setMinWidth(300); // do not shrink
-        menuBar.setPrefWidth(bounds.getWidth());
+        menuBar.setPrefWidth(width);
 
         HBox layout_barre_navigation = new HBox();
         layout_barre_navigation.getChildren().add(menuBar);
