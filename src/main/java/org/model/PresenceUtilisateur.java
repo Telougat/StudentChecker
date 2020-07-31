@@ -1,6 +1,7 @@
 package org.model;
 
 import java.sql.*;
+import java.util.ArrayList;
 
 public class PresenceUtilisateur extends DB {
     private String status;
@@ -9,8 +10,7 @@ public class PresenceUtilisateur extends DB {
     public Presence presence;
     public Utilisateur utilisateur;
 
-    public PresenceUtilisateur(int presence, int utilisateur) {
-        super();
+    private void initPresence(int presence, int utilisateur) {
         Connection db = this.getConn();
         try {
             PreparedStatement presenceUtilisateur = db.prepareStatement("SELECT * FROM Presence_utilisateur WHERE ID = ? AND ID_Presences = ?");
@@ -26,6 +26,24 @@ public class PresenceUtilisateur extends DB {
             ex.printStackTrace();
         }
     }
+
+    public PresenceUtilisateur(int presence, int utilisateur) {
+        super();
+        this.initPresence(presence, utilisateur);
+    }
+
+    public PresenceUtilisateur() {
+        super();
+    }
+
+    /*public ArrayList<PresenceUtilisateur> getPresencesToDeclare() {
+        Connection db = this.getConn();
+        try {
+            PreparedStatement ps = db.prepareStatement();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }*/
 
     public String getStatus() {
         return status;

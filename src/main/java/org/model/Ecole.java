@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Ecole extends DB {
 
@@ -11,9 +12,12 @@ public class Ecole extends DB {
     private int id;
     private String nom;
 
+    public ArrayList<Classe> classe;
+
     // CONSTRUCTEUR
     public Ecole(int id) {
         super();
+        this.classe = new ArrayList<Classe>();
         Connection db = this.getConn();
         try {
             PreparedStatement ecole = db.prepareStatement("SELECT Nom FROM Ecoles WHERE ID = ?");
@@ -22,14 +26,26 @@ public class Ecole extends DB {
             rs.next();
             this.id = id;
             this.nom = rs.getString("Nom");
+
+            this.initClassesList();
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
     }
 
-    public Ecole(int id, String nom) {
-        this.id = id;
-        this.nom = nom;
+    private void initClassesList() {
+        Connection db = this.getConn();
+        try {
+            PreparedStatement ps = db.prepareStatement("SELECT ID FROM Classes WHERE ID_Ecoles = ?");
+            ps.setInt(1, this.id);
+            ResultSet rs = ps.executeQuery();
+
+            while(rs.next()) {
+                this.classe.add(new Classe(rs.getInt("ID")));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
     }
 
     // GETTER ET SETTER
