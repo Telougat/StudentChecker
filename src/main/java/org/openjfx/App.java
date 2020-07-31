@@ -321,10 +321,10 @@ public class App extends Application {
 
         Button bouton_ajout_eleve = new Button("Ajouter un élève");
         Button bouton_supprimer_eleve = new Button("Supprimer un élève");
-        //Button bouton_modifier_eleve = new Button("Modifier un élève");
+        Button bouton_modifier_eleve = new Button("Modifier un élève");
 
         layout_boutons.getChildren().add(bouton_ajout_eleve);
-        //layout_boutons.getChildren().add(bouton_modifier_eleve);
+        layout_boutons.getChildren().add(bouton_modifier_eleve);
         layout_boutons.getChildren().add(bouton_supprimer_eleve);
 
         layout_boutons.setPadding(new Insets(2));
@@ -431,6 +431,47 @@ public class App extends Application {
             {
                 if(affichageListeEleve.getSelectionModel().getSelectedItem() != null)
                 {
+                    Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                    alert.setTitle("Fenêtre de confirmation");
+                    alert.setHeaderText("Suppression d'un élève");
+                    alert.setContentText("Voulez-vous vraiment continuer ?");
+
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == ButtonType.OK){
+                        String chaine_tmp = affichageListeEleve.getSelectionModel().getSelectedItem().toString();
+                        String[] tab_tmp = chaine_tmp.split(" ");
+                        String nom_eleve = tab_tmp[0];
+                        String prenom_eleve = tab_tmp[1];
+                        System.out.println("Nom : "+nom_eleve+" prenom : "+prenom_eleve);
+
+                        ArrayList<Utilisateur> listeEleve = getUtilisateursListByClasseName(cbbClasses.getValue().toString());
+                        for(Utilisateur user: listeEleve)
+                        {
+                            System.out.println("nom : "+user.getNom()+" prenom :"+user.getPrenom());
+                            boolean retVal = false;
+                            if(user.getNom().equals(nom_eleve) && user.getPrenom().equals(prenom_eleve))
+                            {
+                                CRUDUtilisateur crudUtilisateur = new CRUDUtilisateur();
+                                crudUtilisateur.deleteUtilisateur(user);
+                                retVal = true;
+                            }
+
+                            if(retVal)
+                            {
+                                Alert alertInfo = new Alert(Alert.AlertType.INFORMATION);
+                                alertInfo.setTitle("Information");
+                                alertInfo.setHeaderText("Opération terminé");
+
+                                alertInfo.showAndWait();
+                            }
+                        }
+                    } else {
+                        Alert alertInfo = new Alert(Alert.AlertType.INFORMATION);
+                        alertInfo.setTitle("Information");
+                        alertInfo.setHeaderText("Opération annulé");
+
+                        alertInfo.showAndWait();
+                    }
 
                 }
                 else {
