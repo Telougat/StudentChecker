@@ -466,7 +466,7 @@ public class App extends Application {
         PresenceUtilisateur presenceUtilisateur = utilisateur.getUndeclaredPresence();
         if(presenceUtilisateur != null ) {
             System.out.println("NON NON");
-            Label labelPresence = new Label("Presence " + utilisateur.getUndeclaredPresences());
+            Label labelPresence = new Label("Presence " + utilisateur.getUndeclaredPresence());
             Button buttonPresence = new Button("Déclarer sa présence");
             buttonPresence.setOnAction(e -> {
                 System.out.println("OUI OUI");
