@@ -34,11 +34,11 @@ public class App extends Application {
         /******************************************** Début page profil  *********************************************/
 
         //HBox barre_navigation = getNavigationBar();
-        GridPane barre_navigation = getPageProfil();
+        GridPane pageProfil = getPageProfil();
 
         VBox layout_general = new VBox();
 
-        layout_general.getChildren().add(barre_navigation);
+        layout_general.getChildren().add(pageProfil);
 
         var page_profil = new Scene(layout_general, stage.getWidth(), stage.getHeight());
 
@@ -145,7 +145,6 @@ public class App extends Application {
         page_profil.setPadding(new Insets(400));
         page_profil.setVgap(8);
         page_profil.setAlignment(Pos.CENTER);
-
 
 
         EventHandler<ActionEvent> action = changeTab();
