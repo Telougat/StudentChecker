@@ -319,7 +319,7 @@ public class App extends Application {
 
         ComboBox cbbClassesDispo = new ComboBox();
         for (Classe classe: CESI.classe) {
-            cbbClassesDispo.getItems().set(classe.getId(),cbbClassesDispo.getItems().add(classe.getNom()));
+            cbbClassesDispo.getItems().add(classe.getNom());
         }
         cbbClassesDispo.setPromptText("Classe");
         layout_champs_insert.getChildren().add(cbbClassesDispo);
@@ -360,18 +360,23 @@ public class App extends Application {
                                         String classe_eleve = cbbClassesDispo.getValue().toString();
                                         String role_eleve = cbbRoles.getValue().toString();
 
-                                        //CRUDUtilisateur crud_utilisateur = new CRUDUtilisateur();
-                                        //Utilisateur nouvelUtilisateur = crud_utilisateur.createUtilisateur(nom_eleve,prenom_eleve,mail_eleve,password_eleve,role_eleve,CESI);
-                                        int id_classe = 1;
+                                        CRUDUtilisateur crud_utilisateur = new CRUDUtilisateur();
+                                        Utilisateur nouvelUtilisateur = crud_utilisateur.createUtilisateur(nom_eleve,prenom_eleve,mail_eleve,password_eleve,Groupe.getGroupByName(role_eleve),CESI);
+                                        Classe obj_classe_eleve = null;
                                         for (Classe classe: CESI.classe) {
                                             if(classe.getNom().equals(classe_eleve))
                                             {
-                                                id_classe = classe.getId();
+                                                obj_classe_eleve = classe;
                                             }
                                         }
-                                        //crud_utilisateur.linkToClasse(nouvelUtilisateur,id_classe);
-                                        System.out.println("id classe : "+id_classe);
-                                        System.out.println(cbbClassesDispo.getValue().hashCode());
+                                        if(obj_classe_eleve != null)
+                                        {
+                                            crud_utilisateur.linkToClasse(nouvelUtilisateur,obj_classe_eleve);
+                                        }
+                                        else {
+                                            System.out.println("Erreur sur la classe");
+                                        }
+
                                         layout_champs_insert.setVisible(false);
                                     } else {
                                         layout_champs_insert.setVisible(true);
