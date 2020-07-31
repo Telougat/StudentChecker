@@ -466,6 +466,8 @@ public class App extends Application {
                                 alertInfo.setHeaderText("Opération terminé");
 
                                 alertInfo.showAndWait();
+                                //cbbClasses.fireEvent(e);
+                                cbbClasses.setValue(cbbClasses.getSelectionModel().getSelectedItem());
                             }
                         }
                     } else {
@@ -492,6 +494,10 @@ public class App extends Application {
 
                 alert.showAndWait();
             }
+        });
+
+        bouton_supprimer_eleve.setOnAction(e -> {
+
         });
 
         corpsPage.getChildren().add(conteneur_elements);
