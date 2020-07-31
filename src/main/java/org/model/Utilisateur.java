@@ -23,6 +23,15 @@ public class Utilisateur extends DB {
         this.mail = mail;
         this.classe = classe;
         this.groupe = new Groupe(gId, gLabel);
+        this.ecole = ecole;
+    }
+
+    public Utilisateur(int id, String nom, String prenom, String mail, int gId, String gLabel) {
+        this.id = id;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.mail = mail;
+        this.groupe = new Groupe(gId, gLabel);
     }
 
     public Utilisateur(Integer id) {
