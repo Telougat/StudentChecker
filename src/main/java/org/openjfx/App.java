@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
@@ -412,6 +413,21 @@ public class App extends Application {
                                             System.out.println("Erreur sur la classe");
                                         }
 
+                                        text_field_nom.setText("");
+                                        text_field_prenom.setText("");
+                                        text_field_mail.setText("");
+                                        text_field_password.setText("");
+
+                                        ArrayList<Utilisateur> listeEleve = getUtilisateursListByClasseName(cbbClasses.getValue().toString());
+                                        if(!affichageListeEleve.getItems().isEmpty())
+                                        {
+                                            affichageListeEleve.getItems().clear();
+                                        }
+                                        for(Utilisateur user: listeEleve)
+                                        {
+                                            affichageListeEleve.getItems().add(user.getNom() + " " + user.getPrenom());
+                                        }
+
                                         layout_champs_insert.setVisible(false);
                                     } else {
                                         layout_champs_insert.setVisible(true);
@@ -466,6 +482,15 @@ public class App extends Application {
                                 alertInfo.setHeaderText("Opération terminé");
 
                                 alertInfo.showAndWait();
+                                ArrayList<Utilisateur> listeEleveAjour = getUtilisateursListByClasseName(cbbClasses.getValue().toString());
+                                if(!affichageListeEleve.getItems().isEmpty())
+                                {
+                                    affichageListeEleve.getItems().clear();
+                                }
+                                for(Utilisateur userAjour: listeEleveAjour)
+                                {
+                                    affichageListeEleve.getItems().add(userAjour.getNom() + " " + userAjour.getPrenom());
+                                }
                             }
                         }
                     } else {
@@ -492,6 +517,10 @@ public class App extends Application {
 
                 alert.showAndWait();
             }
+        });
+
+        bouton_modifier_eleve.setOnAction(e -> {
+
         });
 
         corpsPage.getChildren().add(conteneur_elements);
